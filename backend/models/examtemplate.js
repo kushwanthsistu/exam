@@ -37,6 +37,11 @@ let examSchema = new mongoose.Schema({
         type : Boolean,
         required : true,
         default : false
+    },
+    enabled : {
+        type : Boolean, 
+        required : true,
+        default : false
     }
 },
 {

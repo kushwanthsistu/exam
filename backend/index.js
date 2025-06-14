@@ -4,6 +4,7 @@ import router from "router"
 import cors from "cors"
 import authentication from "./routes/Authentication.js"
 import exam from "./routes/examsetting.js"
+import adminRoutes from "./routes/adminroutes.js"
 
 let app = new express() ;
 
@@ -11,6 +12,7 @@ app.use(cors()) ;
 app.use(express.json())
 app.use('/api/authenticate', authentication) ;
 app.use('/api/setexam', exam)
+app.use('/api/admin', adminRoutes)
 
 mongoose.connect("mongodb://127.0.0.1:27017/exam") ;
 const db = mongoose.connection ;
