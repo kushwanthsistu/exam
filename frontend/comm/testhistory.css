@@ -1,0 +1,25 @@
+.custom-modal {
+  max-width: 90%; /* default for small screens */
+}
+
+@media (min-width: 768px) {
+  .custom-modal {
+    max-width: 80%; /* or any width you prefer for md screens */
+  }
+}
+
+@media (min-width: 1200px) {
+  .custom-modal {
+    max-width: 80%; /* or any width you prefer for lg screens */
+  }
+}
+
+/* Custom border for modal */
+.custom-border-start{
+  border-left: none;
+}
+@media (min-width: 768px) {
+    .custom-border-start{
+        border-left: 1px solid lightgray; /* adjust thickness/color as needed */
+    }
+}

@@ -9,6 +9,7 @@ let router = express.Router() ;
 let secretKey = "secretkey" ;
 
 router.post('/signup', async(req, res) => {
+    // console.log("got request") ;
     let {emailId, name, password} = req.body ;
     try {
         let data = await User.find({emailId : emailId}) ;
@@ -46,6 +47,8 @@ router.post('/signup', async(req, res) => {
 })
 
 router.post('/login', async(req, res) => {
+    console.log("somebody is trying to login") ;
+    console.log(req.body) ;
     let {emailId, password} = req.body ;
     try {
         let data = await User.find({emailId : emailId}) ;
@@ -68,7 +71,7 @@ router.post('/login', async(req, res) => {
         const token = jwt.sign({
             admin : false,
             emailId : emailId
-        }, secretKey, { expiresIn: '3h' });
+        }, secretKey, { expiresIn: '5h' });
         return res.status(200).json({
             status : true,
             message : "User logged in successfully",
