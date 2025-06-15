@@ -6,6 +6,14 @@ let examSchema = new mongoose.Schema({
         type : String, 
         required : true
     },
+    totalMarks : {
+        type : Number, 
+        required : true
+    },
+    totalQuestions : {
+        type : Number, 
+        required : true
+    },
     sections : [
         {
             subject : {

@@ -11,7 +11,7 @@ let app = new express() ;
 app.use(cors()) ;
 app.use(express.json())
 app.use('/api/authenticate', authentication) ;
-app.use('/api/setexam', exam)
+app.use('/api/setExam', exam)
 app.use('/api/admin', adminRoutes)
 
 mongoose.connect("mongodb://127.0.0.1:27017/exam") ;

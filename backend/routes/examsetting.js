@@ -7,10 +7,12 @@ import authorization from "./authorization.js";
 
 let router = express.Router() ;
 
-router.post('/setTemplate', authorization.adminAuthorization, async(req, res) => {
-    let { title, sections, timeDuration, marks } = req.body ;
+router.post('/setTemplate', async(req, res) => {
+    console.log("got the request") ;
+    let { title, sections, timeDuration, marks, totalQuestions, totalMarks } = req.body ;
     try {
         let data = await Examtemplate.find({ title : title }) ;
+        console.log(data) ;
         if(data.length != 0) {
             return res.status(400).json({
                 status : false, 
@@ -32,7 +34,9 @@ router.post('/setTemplate', authorization.adminAuthorization, async(req, res) =>
             title : title, 
             sections : sections,
             timeDuration : timeDuration,
-            marks : marks
+            marks : marks,
+            totalQuestions : totalQuestions,
+            totalMarks : totalMarks
         }) ;
         let data = await examTemplate.save() ;
         for(let i = 0;i<sections.length;i++) {
