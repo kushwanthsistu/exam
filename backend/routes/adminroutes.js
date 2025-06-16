@@ -105,4 +105,34 @@ router.get('/getDisabledTests', async (req, res) => {
     }
 })
 
+router.get('/getDraftTests', async(req, res) => {
+    try {
+        let data = await Examtemplate.find({ set : false }) ;
+        res.status(200).json({
+            status : true, 
+            message : "got the details",
+            data : data
+        })
+    }
+    catch(error) {
+        console.log(error) ;
+        res.status(500).json({
+            status : false, 
+            message : "Internal Server Error"
+        })
+    }
+})
+
+router.get('/editTest/:id', async(req, res) => {
+    let id = req.params.id ;
+    try {
+        let data = await Examtemplate.find({ _id : id }) ;
+        console.log(data) ;
+        res.render('index', { data : data[0] });
+    }
+    catch(error) {
+        console.log(error) ;
+    }
+})
+
 export default router ;
