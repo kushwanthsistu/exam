@@ -8,7 +8,7 @@ let questionsSchema = new mongoose.Schema({
         required : true
     },
     subject : {
-        type : String, 
+        type : Number, 
         required : true
     },
     qnumber : {
@@ -17,12 +17,12 @@ let questionsSchema = new mongoose.Schema({
     },
     statement : {
         type : String,
-        required : true
+        // required : true
     },
     options : [{type : String}],
     correctAnswer : {
         type : String, 
-        required : true
+        // required : true
     }
 },
 {
