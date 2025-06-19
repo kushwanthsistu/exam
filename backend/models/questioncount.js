@@ -8,7 +8,7 @@ const countSchema = new mongoose.Schema({
         required : true
     },
     subject : {
-        type : String, 
+        type : Number, 
         required : true
     },
     questions : [
