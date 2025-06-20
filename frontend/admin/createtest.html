@@ -66,20 +66,37 @@
                 </div>
             </div>
 
+            <div class="row" id="draftsContainer">
 
-            <div class="row">
+            </div> 
+        </div>
+    </main>
 
-                <!-- card example start -->
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mt-2">
+    <script>
+
+        function displayData(data) {
+            draftsContainer = document.getElementById("draftsContainer") ;
+            for(let i=0;i<data.length;i++) {
+                let element = document.createElement("div") ;
+                element.className = "col-12 col-sm-6 col-md-4 col-lg-3 mt-2" ;
+                let sections = "<ul>" ;
+                for(let j=0;j<data[i].sections.length;j++) {
+                    sections += `<li>${data[i].sections[j].subject}</li>` ;
+                }
+                sections += "</ul>" ;
+                console.log(sections) ;
+                element.innerHTML = `
                     <div class="card">
-                        <h1 class="card-title bg-secondary text-white rounded">IIT Mains</h1>
+                        <h1 class="card-title bg-secondary text-white rounded">${data[i].title}</h1>
                         
                         <div class="card-body">
-                            <p>Duration: HH:MM:SS</p>
-
+                            <p>Duration: ${data[i].timeDuration} minutes</p>
+                            <div>
+                                ${sections}
+                            </div>
                             <div class="row">
                                 <div class="col-12 col-md-6 d-grid mt-2 d-flex justify-content-center">
-                                    <button type="button" class="btn btn-info"  data-bs-toggle="modal" data-bs-target="#editTest">Edit Test</button>
+                                    <button type="button" class="btn btn-info editButton" id=${data[i]._id} data-bs-toggle="modal" data-bs-target="#editTest">Edit Test</button>
                                 </div>
 
                                 <div class="col-12 col-md-6 d-grid mt-2 d-flex justify-content-center">
@@ -91,53 +108,31 @@
                                 </div>
                             </div>
 
-                            <div class="modal" id="editTest">
-                                <div class="modal-dialog custom-modal">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Edit Test</h5>
-                                            <button class="btn-close" data-bs-dismiss="modal" type="button" data-bs-toggle="tooltip" data-bs-placement="right" title="Changes will not be saved"></button>
-                                        </div>
-
-                                        <div class="modal-body">
-                                            <form>
-                                                <div class="row">
-                                                    <div class="col-12 col-md-4">
-                                                        <label for="testname" class="form-label">Name:</label>
-                                                        <input type="text" class="form-control" id="testname" name="testname" autocomplete="off" required>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <label for="hours" class="form-label">Duration (hours):</label>
-                                                        <input type="number" class="form-control" id="hours" name="hours" min="0" max="6" required>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <label for="minutes" class="form-label">Duration (minutes):</label>
-                                                        <input type="number" class="form-control" id="minutes" name="minutes" min="0" max="59" required>
-                                                    </div>
-                                                </div>
-                                            </form>
-
-                                            <div class="mt-4">
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <ul class="nav nav-tabs flex-grow-1" id="sectionTabs"></ul>
-                                                    <button type="button" class="btn btn-outline-primary ms-2" onclick="addSectionTab()">+ Add Section</button>
-                                                </div>
-                                                <div class="tab-content mt-2" id="sectionTabsContent"></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success">Save draft</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
-                <!-- card example ends -->
+                ` ;
+                draftsContainer.appendChild(element) ;
+            }
+        }
 
-            </div>
-        </div>
-    </main>
+        document.getElementById("draftsContainer").addEventListener('click', (e) => {
+            if(e.target.classList.contains("editButton")) {
+                window.location.href = `http://localhost:3000/api/admin/editTest/${e.target.id}` ;
+            }
+        })
+
+        document.addEventListener("DOMContentLoaded", async () => {
+        fetch('http://localhost:3000/api/admin/getDraftTests')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data) ;
+            displayData(data.data) ;
+        })
+        .catch(error => {
+            console.error("Error fetching data:", error);
+        });
+        }) ;
+    </script>
+
 </body>
