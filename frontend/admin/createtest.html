@@ -36,28 +36,7 @@
             <div class="row mb-2">
                 <div class="d-flex">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTest">Create New Test</button>
-                </div>
-
-                <div class="modal" id="createTest">
-                    <div class="modal-dialog custom-modal">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Create New Draft</h5>
-                                <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
-                            </div>
-
-                            <div class="modal-body">
-                                <form action="">
-                                    <label for="testname" class="form-label">Name:</label>
-                                    <input type="text" class="form-control" id="testname" name="testname" autocomplete="off" required>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-success">Save draft</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>                
+                </div>             
             </div>
 
             <div class="card bg-secondary text-white">
@@ -88,48 +67,6 @@
 
                                 <div class="col-12 d-grid mt-2 d-flex justify-content-center">
                                     <button type="button" class="btn btn-success">Launch Test</button>
-                                </div>
-                            </div>
-
-                            <div class="modal" id="editTest">
-                                <div class="modal-dialog custom-modal">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Edit Test</h5>
-                                            <button class="btn-close" data-bs-dismiss="modal" type="button" data-bs-toggle="tooltip" data-bs-placement="right" title="Changes will not be saved"></button>
-                                        </div>
-
-                                        <div class="modal-body">
-                                            <form>
-                                                <div class="row">
-                                                    <div class="col-12 col-md-4">
-                                                        <label for="testname" class="form-label">Name:</label>
-                                                        <input type="text" class="form-control" id="testname" name="testname" autocomplete="off" required>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <label for="hours" class="form-label">Duration (hours):</label>
-                                                        <input type="number" class="form-control" id="hours" name="hours" min="0" max="6" required>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <label for="minutes" class="form-label">Duration (minutes):</label>
-                                                        <input type="number" class="form-control" id="minutes" name="minutes" min="0" max="59" required>
-                                                    </div>
-                                                </div>
-                                            </form>
-
-                                            <div class="mt-4">
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <ul class="nav nav-tabs flex-grow-1" id="sectionTabs"></ul>
-                                                    <button type="button" class="btn btn-outline-primary ms-2" onclick="addSectionTab()">+ Add Section</button>
-                                                </div>
-                                                <div class="tab-content mt-2" id="sectionTabsContent"></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success">Save draft</button>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
