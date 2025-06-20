@@ -42,7 +42,7 @@ router.post('/setTemplate', async(req, res) => {
         for(let i = 0;i<sections.length;i++) {
             let questionCount = new Questioncount({
                 examId : data._id.toString(),
-                subject : sections[i].subject,
+                subject : i,
                 questions : []
             })
             await questionCount.save() ;

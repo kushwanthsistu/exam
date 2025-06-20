@@ -197,6 +197,7 @@ router.post('/saveQuestion/:examId/:subject/:qnumber', async(req, res) => {
             let data = await Questions.updateOne({ examId : examId, subject : subject, qnumber : qnumber}, updatedQuestion) ;
         }
         let questionCount = await Questioncount.find({ examId : examId, subject : subject }) ;
+        console.log(Questioncount) ;
         let questions = questionCount[0].questions ;
         if(req.body.complete) {
             if(!questions.includes(qnumber)) {
@@ -222,6 +223,68 @@ router.post('/saveQuestion/:examId/:subject/:qnumber', async(req, res) => {
             status : false, 
             message : "Internal Server Error"
         })
+    }
+})
+
+async function findError(questions, sectionNumber, tQuestions, examId) {
+    questions.sort((a, b) => a - b);
+    for(let i=1;i<=tQuestions;i++) {
+        if(questions[i-1] != i) {
+            let data = await Questions.find({ examId : examId, subject : sectionNumber, qnumber : i}) ;
+            data = data[0] ;
+            if(!data.statement) {
+                return `section ${sectionNumber+1} question ${i} statement is not completed` ;
+            }
+            if(data.options.length < 2) {
+                return `section ${sectionNumber+1} question ${i}, minimum 2 options should be provided` ;
+            }
+            for(let j=0;j<data.options.length;j++) {
+                if(!data.options[j]) {
+                    return `section ${sectionNumber+1} question ${i} option ${j+1}, options should be provided` ;
+                }
+            }
+            if(!data.correctAnswer) {
+                return `section ${sectionNumber+1} question ${i} correct answer should be provided` ;
+            }
+            let j ;
+            for(j=0;j<data.options.length;j++) {
+                if(data.options[j] == data.correctAnswer)
+                    break ;
+            }
+            console.log(j) ;
+            if(j == data.options.length) {
+                return `section ${sectionNumber+1} question ${i}, correct answer should be one of the given options` ;
+            }
+            return `section${sectionNumber+1} question ${i}, check the question` ;
+        }
+    }
+    return "this function is working fine" ;
+}
+
+router.get('/uploadTest/:examId', async(req, res) => {
+    let examId = req.params.examId ;
+    try {
+        let data = await Questioncount.find({ examId : examId }) ;
+        let testData = await Examtemplate.find({ _id : examId }) ;
+        testData = testData[0].sections ;
+        for(let i=0;i<data.length;i++) {
+            if(testData[i].questionsCount == data[i].questions.length) {
+                continue ;
+            }
+            let message = await findError(data[i].questions, i, testData[i].questionsCount, examId) ;
+            return res.status(422).json({
+                status : false, 
+                message : message
+            })
+        }
+        await Examtemplate.updateOne({ _id : examId}, {set : true, enabled : true }) ;
+        return res.status(200).json({
+            status : true, 
+            message : "test is uploaded successfully" 
+        })
+    }
+    catch(error) {
+        console.log(error) ;
     }
 })
 
