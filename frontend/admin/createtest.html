@@ -12,7 +12,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="createtest.css" type="text/css">
-    <script src="createtest.js"></script>
+    <script defer src="createtest.js"></script>
 </head>
 <body>
     <header class="sticky-top">
@@ -35,7 +35,7 @@
         <div class="container py-3">
             <div class="row mb-2">
                 <div class="d-flex">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTest">Create New Test</button>
+                    <button type="button" class="btn btn-primary" onclick="window.open('examTemplate.html', '_blank')">Create New Test</button>
                 </div>             
             </div>
 
@@ -46,33 +46,7 @@
             </div>
 
 
-            <div class="row">
-
-                <!-- card example start -->
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mt-2">
-                    <div class="card">
-                        <h1 class="card-title bg-secondary text-white rounded">IIT Mains</h1>
-                        
-                        <div class="card-body">
-                            <p>Duration: HH:MM:SS</p>
-
-                            <div class="row">
-                                <div class="col-12 col-md-6 d-grid mt-2 d-flex justify-content-center">
-                                    <button type="button" class="btn btn-info"  data-bs-toggle="modal" data-bs-target="#editTest">Edit Test</button>
-                                </div>
-
-                                <div class="col-12 col-md-6 d-grid mt-2 d-flex justify-content-center">
-                                    <button type="button" class="btn btn-danger">Delete Test</button>
-                                </div>
-
-                                <div class="col-12 d-grid mt-2 d-flex justify-content-center">
-                                    <button type="button" class="btn btn-success">Launch Test</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- card example ends -->
+            <div class="row" id="">
 
             </div>
         </div>
