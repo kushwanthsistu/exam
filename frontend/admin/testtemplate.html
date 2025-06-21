@@ -16,61 +16,49 @@
     <div class="container p-4">
         <div class="row">
             <form action="" class="mt-3">
-                <div class="row mb-3">
-                    <label for="title" class="col-form-label col-12 col-sm-4 d-flex justify-content-md-end mt-3 mt-sm-0">Test Name</label>
-                    <div class="col-12 col-sm-8">
-                        <input type="text" id="title" class="form-control" placeholder="Test Name" required>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <label for="timeDuration" class="col-form-label col-12 col-sm-4 d-flex justify-content-md-end mt-3 mt-sm-0">Total time</label>
-                    <div class="col-12 col-sm-8">
-                        <input type="number" id="timeDuration" class="form-control" min="1" placeholder="Total time duration" required>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <label for="timeDuration" class="col-form-label col-12 col-sm-4 d-flex justify-content-md-end mt-3 mt-sm-0">
-                        Total time
-                    </label>
-                    <div class="col-12 col-sm-8">
-                        <input type="time"
-                            id="timeDuration"
-                            class="form-control"
-                            min="00:01"
-                            max="06:00"
-                            required>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <label for="questions" class="col-form-label col-12 col-sm-4 d-flex justify-content-md-end mt-3 mt-sm-0">Total questions</label>
-                    <div class="col-12 col-sm-8">
-                        <input type="number" id="questions" class="form-control" placeholder="Total questions" required>
-                    </div>
-                </div>
-
-                <div id="markingPattern">
-                    <div class="row mb-3">
-                        <label for="positiveMarks" class="col-form-label col-12 col-sm-4 d-flex justify-content-md-end mt-3 mt-sm-0">Positive mark</label>
+                <div class="card p-3 mt-2">
+                        <div class="row mb-3">
+                        <label for="title" class="col-form-label col-12 col-sm-4 d-flex justify-content-md-end mt-3 mt-sm-0">Test Name</label>
                         <div class="col-12 col-sm-8">
-                            <input type="number" min="1" id="positiveMarks" class="form-control" placeholder="Positive mark" required>
+                            <input type="text" id="title" class="form-control" placeholder="Test Name" required>
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <label for="negativeMarks" class="col-form-label col-12 col-sm-4 d-flex justify-content-md-end mt-3 mt-sm-0">Negative mark</label>
+                        <label for="timeDuration" class="col-form-label col-12 col-sm-4 d-flex justify-content-md-end mt-3 mt-sm-0"> Total time </label>
                         <div class="col-12 col-sm-8">
-                            <input type="number" min="0" id="negativeMarks" class="form-control" placeholder="Negative mark" required>
+                            <input type="time" id="timeDuration" class="form-control" required>
                         </div>
                     </div>
-                </div>
 
-                <div class="row mb-3">
-                    <label for="marks" class="col-form-label col-12 col-sm-4 d-flex justify-content-md-end mt-3 mt-sm-0">Total marks</label>
-                    <div class="col-12 col-sm-8">
-                        <input type="number" id="marks" class="form-control" placeholder="Total marks" required readonly>
+                    <div class="row mb-3">
+                        <label for="questions" class="col-form-label col-12 col-sm-4 d-flex justify-content-md-end mt-3 mt-sm-0">Total questions</label>
+                        <div class="col-12 col-sm-8">
+                            <input type="number" id="questions" class="form-control" placeholder="Total questions" required>
+                        </div>
+                    </div>
+
+                    <div id="markingPattern">
+                        <div class="row mb-3">
+                            <label for="positiveMarks" class="col-form-label col-12 col-sm-4 d-flex justify-content-md-end mt-3 mt-sm-0">Positive mark</label>
+                            <div class="col-12 col-sm-8">
+                                <input type="number" min="1" id="positiveMarks" class="form-control" placeholder="Positive mark" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="negativeMarks" class="col-form-label col-12 col-sm-4 d-flex justify-content-md-end mt-3 mt-sm-0">Negative mark</label>
+                            <div class="col-12 col-sm-8">
+                                <input type="number" min="0" id="negativeMarks" class="form-control" placeholder="Negative mark" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="marks" class="col-form-label col-12 col-sm-4 d-flex justify-content-md-end mt-3 mt-sm-0">Total marks</label>
+                        <div class="col-12 col-sm-8">
+                            <input type="number" id="marks" class="form-control" placeholder="Total marks" required readonly>
+                        </div>
                     </div>
                 </div>
 

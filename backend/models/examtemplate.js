@@ -6,10 +6,6 @@ let examSchema = new mongoose.Schema({
         type : String, 
         required : true
     },
-    totalMarks : {
-        type : Number, 
-        required : true
-    },
     totalQuestions : {
         type : Number, 
         required : true
@@ -20,9 +16,6 @@ let examSchema = new mongoose.Schema({
                 type : String, required : true
             },
             questionsCount : {
-                type : Number, required : true
-            },
-            marks : {
                 type : Number, required : true
             }
         }

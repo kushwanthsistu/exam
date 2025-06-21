@@ -35,124 +35,118 @@ let addSectionsButton = document.getElementById("addSections").addEventListener(
     document.getElementById('sections').appendChild(content) ;
 })
 
-document.getElementById('createTestButton').addEventListener('click', () => {
-    let details = {} ;
-    let title = document.getElementById("title").value ;
-    if(title.length === 0) {
-        alert("title can't be empty") ; 
-        return ;
-    }
-    details.title = title ;
+// document.getElementById('createTestButton').addEventListener('click', () => {
 
-    let totalQuestions = document.getElementById("questions").value ;
-    if(!totalQuestions) {
-        alert("total questions can't be empty") ; 
-        return ;
-    }
-    details.totalQuestions = totalQuestions ;
+document.querySelector("form").addEventListener("submit", (event) => {
+    event.preventDefault();
 
-    let timeDuration = document.getElementById("timeDuration").value ;
-    if(!timeDuration) {
-        alert("time duration can't be empty") ; 
-        return ;
-    }
-    if(timeDuration == 0) {
-        alert("time can't be zero") ; 
-        return ;
-    }
-    details.timeDuration = timeDuration ;
+    const details = {};
 
-    let positiveMarks = document.getElementById("positiveMarks").value ;
-    if(!positiveMarks) {
-        alert("positive marks can't be empty") ; 
-        return ;
+    // Get title
+    const title = document.getElementById("title").value.trim();
+    if (!title) {
+        return alert("Title can't be empty");
     }
-    let negativeMarks = document.getElementById("negativeMarks").value ;
-    if(!negativeMarks) {
-        alert("negative marks can't be empty") ; 
-        return ;
+    details.title = title;
+
+    // Get total questions
+    const totalQuestions = Number(document.getElementById("questions").value);
+    if (!totalQuestions || totalQuestions <= 0) {
+        return alert("Total questions can't be empty or zero");
+    }
+    details.totalQuestions = totalQuestions;
+
+    // Get time duration (HH:MM format)
+    const timeStr = document.getElementById("timeDuration").value; // e.g. "01:30"
+    if (!timeStr) {
+        return alert("Time duration is required");
+    }
+
+    // Parse into hours and minutes
+    const [hours, minutes] = timeStr.split(":").map(Number); // e.g. [1, 30]
+
+    const totalMinutes = hours * 60 + minutes;
+    if (totalMinutes <= 0) {
+        return alert("Time duration must be a positive number");
+    }
+    details.timeDuration = totalMinutes; // Store as total minutes
+
+
+    // Get marks
+    const positiveMarks = Number(document.getElementById("positiveMarks").value);
+    const negativeMarks = Number(document.getElementById("negativeMarks").value);
+    // negativeMarks can be 0
+    if (!positiveMarks) {
+        return alert("Marks cannot be empty or zero");
     }
     details.marks = {
-        positiveMarks : positiveMarks, 
-        negativeMarks : negativeMarks 
+        positiveMarks,
+        negativeMarks,
+    };
+
+    // Get sections
+    const sections = [];
+    let dquestions = 0;
+    const dsections = document.getElementById("sections").children;
+
+    for (let i = 0; i < dsections.length; i++) {
+        const sectionEl = dsections[i];
+        const sectionNumber = sectionEl.id.replace("section", "");
+        const subject = document.getElementById(`section${sectionNumber}Title`).value.trim();
+
+        if (!subject) {
+            return alert(`Section ${sectionNumber} title can't be empty`);
+        }
+
+        const questionsCount = Number(document.getElementById(`section${sectionNumber}Questions`).value);
+        if (!questionsCount || questionsCount <= 0) {
+            return alert(`Section ${sectionNumber} questions count is invalid`);
+        }
+
+        dquestions += questionsCount;
+
+        sections.push({ subject, questionsCount });
+    }
+    details.sections = sections;
+
+    if (dquestions !== totalQuestions) {
+        return alert("Total questions not matching sum of sections' questions");
     }
 
-    let sections = [] ;
-    let dsections = document.getElementById("sections").children ;
-    let dmarks = 0, dquestions = 0 ;
-    for(let i=0;i<dsections.length;i++) {
-        let x = {} ;
-        let section = dsections[i] ;
-        let sectionNumber = section.id.slice(7) ;
-        let title = document.getElementById(`section${sectionNumber}Title`).value ;
-        if(title.length == 0) {
-            alert("section title can't be empty") ; 
-            return ;
-        }
-        x.subject = title ;
-        let questions = document.getElementById(`section${sectionNumber}Questions`).value ;
-        if(!questions || questions == 0) {
-            alert("invalid questions count") ; 
-            return ;
-        }
-        dquestions = Number(dquestions) + Number(questions) ;
-        x.questionsCount = questions ;
-        
-        /* let marks = document.getElementById(`section${sectionNumber}Marks`).value ;
-        if(!marks || marks == 0) {
-            alert("invalid marks count") ; 
-            return ;
-        }
-        dmarks = Number(dmarks) + Number(marks) ;
-        x.marks = marks ; */
-        
-        sections.push(x) ;
-    }
-    details.sections = sections ;
-
-    if(dquestions != totalQuestions) {
-        alert("total questions not matching with individual marks") ; 
-        return ;
-    }
-
+    // Fetch
     fetch('http://localhost:3000/api/setExam/setTemplate', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'  // or 'application/x-www-form-urlencoded'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(details)
     })
-    .then(response => {
-        if(response.status == 500) {
-            throw new Error("Internal Server Error") ;
+    .then((response) => {
+        if (response.status === 500) {
+            throw new Error("Internal Server Error");
         }
-        // if (!response.ok) {
-        //     throw new Error('Network response was not ok');
-        // }
-        return response.json(); // or response.text() if it's plain text
+        return response.json();
     })
-    .then(data => {
-        if(data.code == 3001) {
-            throw new Error("exam title already exits")
+    .then((data) => {
+        if (data.code === 3001) {
+            throw new Error("Exam title already exists");
         }
-        alert("Template has been created successfully")
+        alert("Template has been created successfully");
     })
-    .catch(error => {
+    .catch((error) => {
         console.error('Error:', error);
-        alert(error.message) ;
+        alert(error.message);
     });
-})
+});
 
-// Update Total marks
+// Auto-update total marks
 document.addEventListener('DOMContentLoaded', () => {
     const totalQuestionsInput = document.getElementById('questions');
     const positiveMarksInput = document.getElementById('positiveMarks');
     const totalMarksInput = document.getElementById('marks');
 
     function updateTotalMarks() {
-    const totalQuestions = parseInt(totalQuestionsInput.value) || 0;
-    const positiveMarks = parseInt(positiveMarksInput.value) || 0;
-    totalMarksInput.value = totalQuestions * positiveMarks;
+        const totalQuestions = parseInt(totalQuestionsInput.value) || 0;
+        const positiveMarks = parseInt(positiveMarksInput.value) || 0;
+        totalMarksInput.value = totalQuestions * positiveMarks;
     }
 
     totalQuestionsInput.addEventListener('input', updateTotalMarks);
