@@ -35,8 +35,8 @@ let addSectionsButton = document.getElementById("addSections").addEventListener(
     document.getElementById('sections').appendChild(content) ;
 })
 
-// document.getElementById('createTestButton').addEventListener('click', () => {
 
+// document.getElementById('createTestButton').addEventListener('click', () => {
 document.querySelector("form").addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -130,6 +130,17 @@ document.querySelector("form").addEventListener("submit", (event) => {
             throw new Error("Exam title already exists");
         }
         alert("Template has been created successfully");
+        
+        // Close the modal in the parent page
+        const parentDocument = window.parent.document;
+        const modal = parentDocument.getElementById('examModal');
+
+        // Use Bootstrap's Modal API to hide it
+        const bootstrapModal = window.parent.bootstrap.Modal.getInstance(modal);
+        bootstrapModal.hide();
+
+        // Reload the parent page
+        window.parent.location.reload();
     })
     .catch((error) => {
         console.error('Error:', error);
