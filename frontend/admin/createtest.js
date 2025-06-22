@@ -1,4 +1,6 @@
 // syam's update
+// added deleteTest api
+
 function displayData(data) {
     draftsContainer = document.getElementById("draftsContainer") ;
     for(let i=0;i<data.length;i++) {
@@ -60,10 +62,11 @@ document.getElementById("draftsContainer").addEventListener('click', async (e) =
                 });
 
                 if (response.ok) {
-                    alert("Test deleted successfully.");
+                    //alert("Test deleted successfully.");
                     // Reload the page so that deleted one disappears
                     window.location.reload();
-                } else {
+                }
+                else {
                     const errorData = await response.json();
                     alert(`Error deleting test: ${errorData.message || response.statusText}`);
                 }
