@@ -52,7 +52,9 @@ function displayData(data) {
 // Delegate click events
 document.getElementById("draftsContainer").addEventListener('click', async (e) => {
     if (e.target.classList.contains("editButton")) {
-        window.location.href = `http://localhost:3000/api/admin/editTest/${e.target.id}`;
+        //window.location.href = `http://localhost:3000/api/admin/editTest/${e.target.id}`;
+        // To open in different tab instead of same tab
+        window.open(`http://localhost:3000/api/admin/editTest/${e.target.id}`, '_blank');
     } else if (e.target.classList.contains("deleteButton")) {
         const testId = e.target.id;
         if (confirm("Are you sure you want to delete this test?")) {
