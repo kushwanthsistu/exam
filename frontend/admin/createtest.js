@@ -25,7 +25,7 @@ function displayData(data) {
                         </div>
 
                         <div class="col-12 col-md-6 d-grid mt-2 d-flex justify-content-center">
-                            <button type="button" class="btn btn-danger">Delete Test</button>
+                            <button type="button" class="btn btn-danger deleteButton" id=${data[i]._id}>Delete Test</button>
                         </div>
 
                         <div class="col-12 d-grid mt-2 d-flex justify-content-center">
@@ -41,11 +41,39 @@ function displayData(data) {
     }
 }
 
-document.getElementById("draftsContainer").addEventListener('click', (e) => {
+/* document.getElementById("draftsContainer").addEventListener('click', (e) => {
     if(e.target.classList.contains("editButton")) {
         window.location.href = `http://localhost:3000/api/admin/editTest/${e.target.id}` ;
     }
-})
+}) */
+
+// Delegate click events
+document.getElementById("draftsContainer").addEventListener('click', async (e) => {
+    if (e.target.classList.contains("editButton")) {
+        window.location.href = `http://localhost:3000/api/admin/editTest/${e.target.id}`;
+    } else if (e.target.classList.contains("deleteButton")) {
+        const testId = e.target.id;
+        if (confirm("Are you sure you want to delete this test?")) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/admin/deleteTest/${testId}`, {
+                    method: "DELETE"
+                });
+
+                if (response.ok) {
+                    alert("Test deleted successfully.");
+                    // Reload the page so that deleted one disappears
+                    window.location.reload();
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error deleting test: ${errorData.message || response.statusText}`);
+                }
+            } catch (error) {
+                console.error("Error deleting test:", error);
+                alert("Error deleting test.");
+            }
+        }
+    }
+});
 
 document.addEventListener("DOMContentLoaded", async () => {
     fetch('http://localhost:3000/api/admin/getDraftTests')
