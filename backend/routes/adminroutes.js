@@ -135,6 +135,7 @@ router.get('/editTest/:id', async(req, res) => {
     }
 })
 
+// syam's change 
 router.delete('/deleteTest/:id', async (req, res) => {
     const id = req.params.id;
 
