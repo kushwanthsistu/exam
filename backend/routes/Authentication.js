@@ -71,7 +71,7 @@ router.post('/login', async(req, res) => {
         const token = jwt.sign({
             admin : false,
             emailId : emailId
-        }, secretKey, { expiresIn: '5h' });
+        }, secretKey, { expiresIn: '10h' });
         return res.status(200).json({
             status : true,
             message : "User logged in successfully",
