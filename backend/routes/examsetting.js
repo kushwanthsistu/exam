@@ -34,9 +34,8 @@ router.post('/setTemplate', async(req, res) => {
             title : title, 
             sections : sections,
             timeDuration : timeDuration,
-            marks : marks,
             totalQuestions : totalQuestions,
-            totalMarks : totalMarks
+            marks : marks
         }) ;
         let data = await examTemplate.save() ;
         for(let i = 0;i<sections.length;i++) {

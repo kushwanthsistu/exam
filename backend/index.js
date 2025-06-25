@@ -5,6 +5,7 @@ import cors from "cors"
 import authentication from "./routes/Authentication.js"
 import exam from "./routes/examsetting.js"
 import adminRoutes from "./routes/adminroutes.js"
+import studentRoute from "./routes/studentroutes.js"
 
 let app = new express() ;
 
@@ -15,6 +16,7 @@ app.set('views', './views');
 app.use('/api/authenticate', authentication) ;
 app.use('/api/setExam', exam)
 app.use('/api/admin', adminRoutes)
+app.use('/api/user', studentRoute) ;
 
 // syam added
 app.use(express.static('public'))
@@ -28,6 +30,10 @@ db.on("error", (error) => {
 })
 db.once("open", () => {
     console.log("successfully connected to the database") ;
+})
+
+app.get('/', (req, res) => {
+    console.log("this route is working") ;
 })
 
 app.listen(3000, () => {
