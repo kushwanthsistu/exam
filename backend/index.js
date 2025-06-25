@@ -18,6 +18,11 @@ app.use('/api/setExam', exam)
 app.use('/api/admin', adminRoutes)
 app.use('/api/user', studentRoute) ;
 
+// syam added
+app.use(express.static('public'))
+app.get('/', (req, res) => res.render('index1'))
+// syam added
+
 mongoose.connect("mongodb://127.0.0.1:27017/exam") ;
 const db = mongoose.connection ;
 db.on("error", (error) => {
