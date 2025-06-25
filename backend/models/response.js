@@ -7,6 +7,11 @@ let responseSchema = new mongoose.Schema({
         ref : "User",
         required : true
     },
+    examId : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "Examtemplate",
+        required : true
+    },
     questionId : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "Questions",
@@ -17,6 +22,9 @@ let responseSchema = new mongoose.Schema({
         required : true
     },
     marks : {
+        type : Number
+    },
+    type : {
         type : Number,
         required : true
     }

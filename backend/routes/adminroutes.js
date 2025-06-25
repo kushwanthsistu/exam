@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 import Examtemplate from "../models/examtemplate.js"
 import Questioncount from "../models/questioncount.js";
 import Questions from "../models/questions.js";
-import authorization from "./authorization.js";
+import authorization from "./Authorization.js";
 
 let router = express.Router() ;
 

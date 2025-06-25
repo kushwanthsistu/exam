@@ -14,16 +14,24 @@ let attemptsSchema = new mongoose.Schema({
     },
     completed : {
         type : Boolean,
-        required : true
+        // required : true
     },
     totalMarks : {
         type : Number,
-        required : true
+        // required : true
     },
     marksScored : {
         type : Number,
+        // required : true
+    },
+    timeRemaining : {
+        type : Number
     }
 },
 {
     timestamps : true
 })
+
+const Attempts =  mongoose.model("Attempts", attemptsSchema) ;
+
+export default Attempts ;
