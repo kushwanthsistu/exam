@@ -60,7 +60,7 @@
     </div>
 
 <script>
-    // localStorage.setItem('token', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImVtYWlsSWQiOiJrdXNod2FudGhzaXN0dUBnbWFpbC5jb20iLCJpYXQiOjE3NTA4NTYxNTQsImV4cCI6MTc1MDg5MjE1NH0.slQxK_8asPjbEItttA-WBjZ1H4BRza7oSu8tT9Z6r_s");
+    localStorage.setItem('token', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImVtYWlsSWQiOiJrdXNod2FudGhzaXN0dUBnbWFpbC5jb20iLCJpYXQiOjE3NTA4NTYxNTQsImV4cCI6MTc1MDg5MjE1NH0.slQxK_8asPjbEItttA-WBjZ1H4BRza7oSu8tT9Z6r_s");
     const parts = window.location.href.split("/");
     const examId = parts[parts.length - 1];
     document.getElementById(`section${0}`).style.backgroundColor = "yellow" ;
@@ -153,8 +153,9 @@
     let secondsDisplay = document.getElementById("seconds") ;
 
     function setTimer(time) {
-        hours = Math.floor((time/60)) ;
-        minutes = time%60 ;
+        hours = Math.floor((parseInt(time)/60)) ;
+        minutes = parseInt(time)%60 ;
+        //alert(hours);
         hoursDisplay.innerText = hours ;
         minutesDisplay.innerText = minutes ;
         secondsDisplay.innerText = seconds ;

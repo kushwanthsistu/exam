@@ -140,6 +140,8 @@ router.post('/submitAnswer/:questionId', authorization.userAuthorization, async(
 })
 
 router.get('/getOptions/:examId', authorization.userAuthorization, async(req, res) => {
+
+    console.log("getting the request")
     let userId = req.userId ;
     let examId = req.params.examId ;
     try {
@@ -167,6 +169,7 @@ router.get('/getOptions/:examId', authorization.userAuthorization, async(req, re
 router.get('/getTimer/:examId', authorization.userAuthorization, async(req, res) => {
     let userId = req.userId ;
     let examId = req.params.examId ;
+    console.log(userId)
     try {
         let data = await Attempts.find({ examId : examId, userId : userId }) ;
         if(data.length == 0) {
