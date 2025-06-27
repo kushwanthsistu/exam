@@ -128,7 +128,7 @@ router.get('/editTest/:id', async(req, res) => {
     try {
         let data = await Examtemplate.find({ _id : id }) ;
         // console.log(data) ;
-        res.render('index', { data : data[0] });
+        res.render('index1', { data : data[0] });
     }
     catch(error) {
         console.log(error) ;
