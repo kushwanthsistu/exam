@@ -86,7 +86,7 @@ router.get('/takeTest/:id', async(req, res) => {
                 
             }
         }
-        res.render('test', { data : data, questions : questions }) ;
+        res.render('test1', { data : data, questions : questions }) ;
     }
     catch(error) {
         console.log(error) ;
