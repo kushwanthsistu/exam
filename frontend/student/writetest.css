@@ -1,12 +1,7 @@
-.flagged-button {
-  position: relative;
+.current{
+    border: 4px solid #006dcc;
 }
 
-.flagged-button::after {
-  content: '🚩'; /* You can change this to any flag emoji or text */
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  font-size: 1.2rem;
-  line-height: 1;
+.flagged{
+    border: 4px solid purple;
 }

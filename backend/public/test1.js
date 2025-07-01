@@ -49,12 +49,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log(data) ;
         for(let i=0;i<data.length;i++) {
             if(data[i].type == 1) {
-                document.getElementById(`${data[i].questionId}button`).style.backgroundColor = "green" ;
+                //document.getElementById(`${data[i].questionId}button`).style.backgroundColor = "green" ;
+                document.getElementById(`${data[i].questionId}button`).classList.remove('btn-secondary');
+                document.getElementById(`${data[i].questionId}button`).classList.remove('btn-success');
             }
             else {
-                document.getElementById(`${data[i].questionId}button`).style.backgroundColor = "purple" ;
+                //document.getElementById(`${data[i].questionId}button`).style.backgroundColor = "purple" ;
+                document.getElementById(`${data[i].questionId}button`).classList.add('flagged');
             }
-            document.getElementById(`section${0}question${0}button`).childNodes[1].style.backgroundColor = "blue" ;
+            //document.getElementById(`section${0}question${0}button`).childNodes[1].style.backgroundColor = "blue" ;
+            document.getElementById(`section${0}question${0}button`).childNodes[1].classList.add('active');
         }
     })
     .catch(err => {
@@ -187,7 +191,8 @@ let question = 0 ;
 document.getElementById("previous").addEventListener('click', async(req, res) => {
     saveQuestion(1, section, question) ;
     if(question == 0) {
-        document.getElementById(`section${section}question${question}button`).childNodes[1].style.backgroundColor = "blue" ;
+        //document.getElementById(`section${section}question${question}button`).childNodes[1].style.backgroundColor = "blue" ;
+        document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('active');
         return 0 ;
     }
     document.getElementById(`section${section}question${question}`).style.display = "none" ;
@@ -198,7 +203,8 @@ document.getElementById("markforreview").addEventListener('click', async(req, re
     saveQuestion(2, section, question) ;
     let x = document.getElementById(`section${section}Questions`).childElementCount ;
     if(question == x-1) {
-        document.getElementById(`section${section}question${question}button`).childNodes[1].style.backgroundColor = "blue" ;
+        //document.getElementById(`section${section}question${question}button`).childNodes[1].style.backgroundColor = "blue" ;
+        document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('active');
         return ;
     }
     document.getElementById(`section${section}question${question}`).style.display = "none" ;
@@ -239,18 +245,23 @@ function saveQuestion(type, givenSection, givenQuestion) {
             console.error('Error:', error);
             alert("question data not saved successfully") ;
         });
-        document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "white" ;
+        //document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "white" ;
+        document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].classList.remove('active');
         return ;
     }
     if(type == 1) {
-        document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "green" ;
-
+        //document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "green" ;
+        document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].classList.remove('btn-secondary');
+        document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].classList.remove('active');
+        document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].classList.add('btn-success');
     }
     else if(type == 2) {
-        document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "purple" ;
+        //document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "purple" ;
+        document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].classList.add('flagged');
     }
     else {
-        document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "white" ;
+        //document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "white" ;
+        document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].classList.remove('active');
     }
     // let question_id = document.getElementById(`section${givenSection}question${givenQuestion}optionsblock`).parentElement.id ;
     // alert(question_id) ;
@@ -280,7 +291,8 @@ document.getElementById("saveandnext").addEventListener("click", async(req, res)
     saveQuestion(1, section, question) ;
     let x = document.getElementById(`section${section}Questions`).childElementCount ;
     if(question == x-1) {
-        document.getElementById(`section${section}question${question}button`).childNodes[1].style.backgroundColor = "blue" ;
+        //document.getElementById(`section${section}question${question}button`).childNodes[1].style.backgroundColor = "blue" ;
+        document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('active');
         return ;
     }
     document.getElementById(`section${section}question${question}`).style.display = "none" ;
@@ -302,7 +314,8 @@ function displayQuestion() {
             }
         }
     }
-    document.getElementById(`section${section}question${question}button`).childNodes[1].style.backgroundColor = "blue" ;
+    //document.getElementById(`section${section}question${question}button`).childNodes[1].style.backgroundColor = "blue" ;
+    document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('active');
 }
 
 
