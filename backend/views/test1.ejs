@@ -12,58 +12,147 @@
 
     <script defer src="/test1.js"></script>
 </head>
-<body>
-    <h2>hello</h2>
-    <h2><%= data.title %></h2>
-    <div id="timer">
-        <div style="font-family: monospace;" id="hours">00</div>
-        <div style="font-family: monospace;" id="minutes">00</div>
-        <div style="font-family: monospace;" id="seconds">00</div>
+<body class="vh-100 d-flex flex-column overflow-hidden">
+
+    <div class="d-grid bg-dark mb-2" style="grid-template-columns: 1fr 250px;">
+        <div class="d-flex align-items-center justify-content-center">
+            <h1 class="text-white"> <%= data.title %> </h1>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-center bg-secondary rounded m-2">
+            <h2 class="text-white" id="timer"> 
+                <span id="hours">00</span> : <span id="minutes">00</span> : <span id="seconds">00</span> 
+            </h2>
+        </div>
     </div>
-    <div id="sectionsBlock">
-        <% for(let i = 0; i < data.sections.length ; i++) { %>
-            <button id="<%= `section${i}` %>" class="sectionButtons"><%= data.sections[i].subject %></button>
-        <% } %>
-    </div>
-    <div id="questionButtonsBlock">
-        <% for(let i = 0 ; i < data.sections.length ; i++) { %>
-            <div id="<%= `section${i}Questions` %>" style="display : none">
-                <% for(let j = 0; j < data.sections[i].questionsCount; j++) { %>
-                    <div id="<%= `section${i}question${j}button` %>">
-                    <button class="questionButtons" id="<%= `${questions[i][j]._id}button` %>"><%= j+1 %></button>
-                    </div>
-                <% } %>
-            </div>
-        <% } %>
-    </div>
-    <div id="questionBlock">
-        <% for(let i = 0 ; i < questions.length ; i++) { %>
-            <div id="<%= `section${i}` %>">
-            <% for(let j = 0 ; j < questions[i].length ; j++) { %> 
-                <div id="<%= `section${i}question${j}` %>" style="display: none ;">
-                <div id="<%= questions[i][j]._id %>">
-                    <h4 id="<%= `section${i}question${j}statement` %>"><%= questions[i][j].statement %></h4>
-                    <div id="<%= `section${i}question${j}optionsblock` %>">
-                        <% for(let k = 0 ; k < questions[i][j].options.length ; k++) { %>
-                            <div>
-                            <input type="radio" name="<%= `section${i}question${j}options` %>" value="<%= questions[i][j].options[k] %>" id="<%= `section${i}question${j}option${k}` %>">
-                            <label for="<%= `section${i}question${j}option${k}` %>"><%= questions[i][j].options[k] %></label><br>
-                            </div>
-                        <% } %>
-                    </div>
-                </div>
+
+    <div class="d-grid" style="grid-template-columns: 150px 1fr;">
+        <!-- Section row -->
+        <div class="d-flex align-items-center justify-content-center bg-dark rounded mb-2">
+            <h5 class="text-white">Section</h5>
+        </div>
+        <div id="sectionsBlock" class="d-flex overflow-auto align-items-center mb-2" style="white-space: nowrap;">
+            <% for(let i = 0; i < data.sections.length ; i++) { %>
+                <button id="<%= `section${i}` %>" class="sectionButtons btn btn-secondary m-2"><%= data.sections[i].subject %></button>
+            <% } %>
+        </div>
+
+        <!-- Questions row -->
+        <div class="d-flex align-items-center justify-content-center bg-dark rounded mb-2">
+            <h5 class="text-white">Questions</h5>
+        </div>
+        <div id="questionButtonsBlock" class="d-flex overflow-auto align-items-center mb-2" style="white-space: nowrap;">
+            <% for(let i = 0 ; i < data.sections.length ; i++) { %>
+                <div id="<%= `section${i}Questions` %>" class="d-none">
+                    <% for(let j = 0; j < data.sections[i].questionsCount; j++) { %>
+                        <div id="<%= `section${i}question${j}button` %>">
+                            <button id="<%= `${questions[i][j]._id}button` %>" class="questionButtons btn btn-secondary position-relative m-2"> <%= j+1 %> </button>
+                        </div>
+                    <% } %>
                 </div>
             <% } %>
-        <% } %>
+        </div>
+    </div>
+
+
+
+    <div class="d-flex flex-column flex-grow-1 h-100 overflow-auto" style="min-height: 0;">
+
+        <div class="d-flex flex-column flex-sm-row flex-grow-1 overflow-auto"  style="overflow-y: auto; overflow-x: hidden; min-height:0;">
+            <div class="flex-grow-1 overflow-auto p-3">
+                <div class="d-sm-none d-flex justify-content-end mb-2">
+                    <button class="btn btn-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidePanelXS"> &lt; </button>
+                </div>
+
+                <div id="questionBlock" class="row mb-2 w-100">
+                    <% for(let i = 0 ; i < questions.length ; i++) { %>
+                        <div id="<%= `section${i}` %>">
+                            <% for(let j = 0 ; j < questions[i].length ; j++) { %> 
+                                <div id="<%= `section${i}question${j}` %>" style="display: none ;">
+                                    <div id="<%= questions[i][j]._id %>">
+                                        <h3 id="<%= `section${i}question${j}statement` %>"><%= questions[i][j].statement %></h3>
+                                        <div id="<%= `section${i}question${j}optionsblock` %>">
+                                            <% for(let k = 0 ; k < questions[i][j].options.length ; k++) { %>
+                                                <div class="form-check mb-2 col-12 w-100">
+                                                    <input class="form-check-input" type="radio" name="<%= `section${i}question${j}options` %>" value="<%= questions[i][j].options[k] %>" id="<%= `section${i}question${j}option${k}` %>">
+                                                    <label class="form-check-label" for="<%= `section${i}question${j}option${k}` %>"><%= questions[i][j].options[k] %></label><br>
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                    <% } %>
+                </div>
             </div>
+
+            <div class="d-none d-sm-block p-2" style="width: 250px;">
+                <div class="d-flex align-items-center m-3 gap-1">
+                    <button class="btn btn-success">i</button>
+                    <p class="m-0"> - Submitted</p>
+                </div>
+                <div class="d-flex align-items-center m-3 gap-1">
+                    <button class="btn btn-secondary">i</button>
+                    <p class="m-0"> - Yet to be Submitted</p>
+                </div>
+                <div class="d-flex align-items-center m-3 gap-1">
+                    <button class="btn btn-warning">i</button>
+                    <p class="m-0"> - Marked for Review</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row w-100 auto">
+            <div class="col-6 col-md-2 d-flex justify-content-center mb-2">
+                <button id="markforreview" type="button" class="btn btn-warning" style="height:60px;">Mark for Review</button>
+            </div>
+
+            <div class="col-6 col-md-2 d-flex justify-content-center mb-2">
+                <!-- should create a new api for this -->
+                <button id="save" type="submit" class="btn btn-success" style="height:60px;">Save</button>
+            </div>
+
+            <div class="col-4 col-md-2 d-flex justify-content-center mb-2">
+                <button id="previous" type="button" class="btn btn-primary" style="height:60px;">Previous</button>
+            </div>
+
+            <div class="col-4 col-md-2 d-flex justify-content-center mb-2">
+                <button id="saveandnext" type="submit" class="btn btn-success" style="height:60px;">Save & Next</button>
+            </div>
+
+            <div class="col-4 col-md-2 d-flex justify-content-center mb-2">
+                <!-- should create a new api for this -->
+                <button id="next" type="button" class="btn btn-primary" style="height:60px;">Next</button>
+            </div>
+        </div>
     </div>
-    <div id="navigationbuttons">
-        <button id="previous">previous</button>
-        <button id="saveandnext">save and next</button>
-        <button id="markforreview">mark for review</button>
+
+    <div class="row bg-dark p-2">
+        <div class="d-flex align-items-center justify-content-center">
+            <button id="submitButton" type="button" class="btn btn-success" style="height:60px;">Submit Test</button>
+        </div>
     </div>
-    <div>
-        <button id="submitButton">submit</button>
+
+    <div class="offcanvas offcanvas-end d-sm-none" tabindex="-1" id="sidePanelXS">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">Instructions</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="d-flex align-items-center m-3 gap-1">
+            <button class="btn btn-success">i</button>
+            <p class="m-0"> - Submitted</p>
+            </div>
+            <div class="d-flex align-items-center m-3 gap-1">
+            <button class="btn btn-secondary">i</button>
+            <p class="m-0"> - Yet to be Submitted</p>
+            </div>
+            <div class="d-flex align-items-center m-3 gap-1">
+            <button class="btn btn-warning">i</button>
+            <p class="m-0"> - Marked for Review</p>
+            </div>
+        </div>
     </div>
 </body>
 </html>

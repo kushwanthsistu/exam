@@ -1,9 +1,11 @@
 localStorage.setItem('token', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImVtYWlsSWQiOiJrdXNod2FudGhzaXN0dUBnbWFpbC5jb20iLCJpYXQiOjE3NTA4NTYxNTQsImV4cCI6MTc1MDg5MjE1NH0.slQxK_8asPjbEItttA-WBjZ1H4BRza7oSu8tT9Z6r_s");
 const parts = window.location.href.split("/");
 const examId = parts[parts.length - 1];
-document.getElementById(`section${0}`).style.backgroundColor = "yellow" ;
-let answerMap ;
+//document.getElementById(`section${0}`).style.backgroundColor = "yellow" ;
+document.getElementById(`section${0}`).classList.remove('btn-secondary');
+document.getElementById(`section${0}`).classList.add('btn-primary');
 
+let answerMap;
 
 document.addEventListener("DOMContentLoaded", async () => {
     const parts = window.location.href.split("/");
@@ -141,11 +143,11 @@ function updatetime(hours, minutes) {
         })
         .then(response => response.json()) // Parse JSON response
         .then(data => {
-        console.log('Success:', data);
+            console.log('Success:', data);
         })
         .catch(error => {
-        console.error('Error:', error);
-        // alert("question data not saved successfully") ;
+            console.error('Error:', error);
+            // alert("question data not saved successfully") ;
         });
 
 }
@@ -177,7 +179,9 @@ function finalSubmitFunction() {
 
 }
 
-document.getElementById("section0Questions").style.display = "block" ;
+//document.getElementById("section0Questions").style.display = "block" ;
+document.getElementById("section0Questions").classList.remove('d-none');
+document.getElementById("section0Questions").classList.add('d-flex');
 let section = 0 ;
 let question = 0 ;
 document.getElementById("previous").addEventListener('click', async(req, res) => {
@@ -229,17 +233,18 @@ function saveQuestion(type, givenSection, givenQuestion) {
         })
         .then(response => response.json()) // Parse JSON response
         .then(data => {
-        console.log('Success:', data);
+            console.log('Success:', data);
         })
         .catch(error => {
-        console.error('Error:', error);
-        alert("question data not saved successfully") ;
+            console.error('Error:', error);
+            alert("question data not saved successfully") ;
         });
         document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "white" ;
         return ;
     }
     if(type == 1) {
         document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "green" ;
+
     }
     else if(type == 2) {
         document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "purple" ;
@@ -270,6 +275,7 @@ function saveQuestion(type, givenSection, givenQuestion) {
         alert("question data not saved successfully") ;
         });
 }
+
 document.getElementById("saveandnext").addEventListener("click", async(req, res) => {
     saveQuestion(1, section, question) ;
     let x = document.getElementById(`section${section}Questions`).childElementCount ;
@@ -281,6 +287,7 @@ document.getElementById("saveandnext").addEventListener("click", async(req, res)
     question = question + 1 ;
     displayQuestion() ;
 })
+
 function displayQuestion() {
     document.getElementById(`section${section}question${question}`).style.display = "block" ;
     let question_id = document.getElementById(`section${section}question${question}optionsblock`).parentElement.id ;
@@ -300,7 +307,8 @@ function displayQuestion() {
 
 
 document.getElementById("questionButtonsBlock").addEventListener("click", async(e) => {
-if(e.target.className == "questionButtons") {
+if (e.target.classList.contains("questionButtons")){
+//if(e.target.className == "questionButtons") {
     saveQuestion(1, section, question) ;
     let str = e.target.parentElement.id ;
     document.getElementById(`section${section}question${question}`).style.display = "none" ;
@@ -311,17 +319,33 @@ if(e.target.className == "questionButtons") {
 })
 
 document.getElementById("sectionsBlock").addEventListener("click", (e) => {
-if(e.target.className == "sectionButtons") {
+if (e.target.classList.contains("sectionButtons")) {
+//if(e.target.className == "sectionButtons") {
     saveQuestion(1, section, question) ;
     let str = e.target.id ;
     const sectionNumber = parseInt(str.slice(7));
-    document.getElementById(`section${section}`).style.backgroundColor = "white" ;
-    document.getElementById(`section${section}Questions`).style.display = "none" ;
+
+    //document.getElementById(`section${section}`).style.backgroundColor = "white" ;
+    document.getElementById(`section${section}`).classList.remove('btn-primary');
+    document.getElementById(`section${section}`).classList.add('btn-secondary');
+    
+
+    //document.getElementById(`section${section}Questions`).style.display = "none" ;
+    document.getElementById(`section${section}Questions`).classList.remove('d-flex');
+    document.getElementById(`section${section}Questions`).classList.add('d-none');
+
     document.getElementById(`section${section}question${question}`).style.display = "none" ;
     section = parseInt(str.slice(7));
     question = 0 ;
-    document.getElementById(`section${section}`).style.backgroundColor = "yellow" ;
-    document.getElementById(`section${section}Questions`).style.display = "block" ;
+    
+    //document.getElementById(`section${section}`).style.backgroundColor = "yellow" ;
+    document.getElementById(`section${section}`).classList.remove('btn-secondary');
+    document.getElementById(`section${section}`).classList.add('btn-primary');
+    
+    //document.getElementById(`section${section}Questions`).style.display = "block" ;
+    document.getElementById(`section${section}Questions`).classList.remove('d-none');
+    document.getElementById(`section${section}Questions`).classList.add('d-flex');
+    
     displayQuestion() ;
 }
 })

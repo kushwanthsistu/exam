@@ -18,6 +18,7 @@
             <button id="<%= `section${i}` %>" class="sectionButtons"><%= data.sections[i].subject %></button>
         <% } %>
     </div>
+    
     <div id="questionButtonsBlock">
         <% for(let i = 0 ; i < data.sections.length ; i++) { %>
             <div id="<%= `section${i}Questions` %>" style="display : none">
@@ -29,27 +30,29 @@
             </div>
         <% } %>
     </div>
+
     <div id="questionBlock">
         <% for(let i = 0 ; i < questions.length ; i++) { %>
             <div id="<%= `section${i}` %>">
-            <% for(let j = 0 ; j < questions[i].length ; j++) { %> 
-                <div id="<%= `section${i}question${j}` %>" style="display: none ;">
-                <div id="<%= questions[i][j]._id %>">
-                    <h4 id="<%= `section${i}question${j}statement` %>"><%= questions[i][j].statement %></h4>
-                    <div id="<%= `section${i}question${j}optionsblock` %>">
-                        <% for(let k = 0 ; k < questions[i][j].options.length ; k++) { %>
-                            <div>
-                            <input type="radio" name="<%= `section${i}question${j}options` %>" value="<%= questions[i][j].options[k] %>" id="<%= `section${i}question${j}option${k}` %>">
-                            <label for="<%= `section${i}question${j}option${k}` %>"><%= questions[i][j].options[k] %></label><br>
+                <% for(let j = 0 ; j < questions[i].length ; j++) { %> 
+                    <div id="<%= `section${i}question${j}` %>" style="display: none ;">
+                        <div id="<%= questions[i][j]._id %>">
+                            <h4 id="<%= `section${i}question${j}statement` %>"><%= questions[i][j].statement %></h4>
+                            <div id="<%= `section${i}question${j}optionsblock` %>">
+                                <% for(let k = 0 ; k < questions[i][j].options.length ; k++) { %>
+                                    <div>
+                                        <input type="radio" name="<%= `section${i}question${j}options` %>" value="<%= questions[i][j].options[k] %>" id="<%= `section${i}question${j}option${k}` %>">
+                                        <label for="<%= `section${i}question${j}option${k}` %>"><%= questions[i][j].options[k] %></label><br>
+                                    </div>
+                                <% } %>
                             </div>
-                        <% } %>
+                        </div>
                     </div>
-                </div>
-                </div>
-            <% } %>
-        <% } %>
+                <% } %>
             </div>
+        <% } %>
     </div>
+    
     <div id="navigationbuttons">
         <button id="previous">previous</button>
         <button id="saveandnext">save and next</button>
