@@ -18,9 +18,9 @@ let examSchema = new mongoose.Schema({
             questionsCount : {
                 type : Number, required : true
             },
-            marks : {
-                type : Number, required : true
-            }
+            // marks : {
+            //     type : Number, required : true
+            // }
         }
     ],
     timeDuration : {
