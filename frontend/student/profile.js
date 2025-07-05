@@ -1,5 +1,9 @@
 let token = localStorage.getItem("token") ;
 // console.log(token) ;
+if(!localStorage.getItem('token')){
+    location.href='ISE.html';
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     fetch(`http://localhost:3000/api/user/getProfile`, {
         method: 'GET',

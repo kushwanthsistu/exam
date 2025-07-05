@@ -1,6 +1,8 @@
 // alert(localStorage.getItem('token')) ;
-if(!localStorage.getItem('token'))
-location.href='login.html' ;
+if(!localStorage.getItem('token')){
+    location.href='ISE.html';
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     fetch(`http://localhost:3000/api/user/getExams`, {
         method: 'GET',

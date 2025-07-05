@@ -51,7 +51,7 @@ document.querySelector("form").addEventListener("submit", (event) => {
 
             // Save token to localStorage
             localStorage.setItem('token', data.token);
-            alert(data.token) ;
+            //alert(data.token) ;
 
             // Go to student home page
             window.location.href = "home.html";
