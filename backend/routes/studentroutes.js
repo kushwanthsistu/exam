@@ -385,7 +385,7 @@ router.post('/submitAnswer/:token/:questionId', authorization.tokenAuthorization
     }
 })
 
-router.get('/getOptions/:token', authorization.tokenAuthorization, async(req, res) => {
+router.get('/getOptions/:examId', authorization.userAuthorization, async(req, res) => {
     let userId = req.userId ;
     let examId = req.examId ;
     try {

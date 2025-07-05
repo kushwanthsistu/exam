@@ -1,0 +1,7 @@
+.current{
+    border: 4px solid #006dcc;
+}
+
+.flagged{
+    border: 4px solid purple;
+}

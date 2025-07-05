@@ -128,12 +128,30 @@ router.get('/editTest/:id', async(req, res) => {
     try {
         let data = await Examtemplate.find({ _id : id }) ;
         // console.log(data) ;
-        res.render('index', { data : data[0] });
+        res.render('index1', { data : data[0] });
     }
     catch(error) {
         console.log(error) ;
     }
 })
+
+// syam's change 
+router.delete('/deleteTest/:id', async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const result = await Examtemplate.deleteOne({ _id: id });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: "Test not found" });
+        }
+
+        return res.status(200).json({ message: "Test deleted successfully" });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Error deleting test" });
+    }
+});
 
 router.get('/getQuestion/:examId/:subject/:qnumber', async(req, res) => {
     let {examId, subject, qnumber} = req.params ;
