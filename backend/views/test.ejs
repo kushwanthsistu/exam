@@ -58,22 +58,25 @@
         <button id="saveandnext">save and next</button>
         <button id="markforreview">mark for review</button>
     </div>
+    <div id="clearSection">
+        <button id="reset">reset</button>
+    </div>
     <div>
         <button id="submitButton">submit</button>
     </div>
 
 <script>
-    localStorage.setItem('token', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImVtYWlsSWQiOiJrdXNod2FudGhzaXN0dUBnbWFpbC5jb20iLCJpYXQiOjE3NTA4NTYxNTQsImV4cCI6MTc1MDg5MjE1NH0.slQxK_8asPjbEItttA-WBjZ1H4BRza7oSu8tT9Z6r_s");
+    // alert(localStorage.getItem('token')) ;
     const parts = window.location.href.split("/");
-    const examId = parts[parts.length - 1];
+    const token = parts[parts.length - 1];
     document.getElementById(`section${0}`).style.backgroundColor = "yellow" ;
     let answerMap ;
-
+    // const parts = window.location.href.split("/");
+    //     const token = parts[parts.length - 1];
 
     document.addEventListener("DOMContentLoaded", async () => {
-        const parts = window.location.href.split("/");
-        const examId = parts[parts.length - 1];
-        fetch(`http://localhost:3000/api/user/getOptions/${examId}`, {
+        // alert(token) ;
+        fetch(`http://localhost:3000/api/user/getOptions/${token}`, {
         method: 'GET',
         headers: {
             'Authorization' : `Bearer ${localStorage.getItem('token')}`
@@ -95,7 +98,7 @@
             alert("Internal Server Error, unable to load the details. try refreshing the page")
         });
         
-        fetch(`http://localhost:3000/api/user/getButtonsStatus/${examId}`, {
+        fetch(`http://localhost:3000/api/user/getButtonsStatus/${token}`, {
         method: 'GET',
         headers: {
             'Authorization' : `Bearer ${localStorage.getItem('token')}`
@@ -125,7 +128,7 @@
             alert("Internal Server Error, unable to load the details. try refreshing the page")
         });
         
-        fetch(`http://localhost:3000/api/user/getTimer/${examId}`, {
+        fetch(`http://localhost:3000/api/user/getTimer/${token}`, {
         method: 'GET',
         headers: {
             'Authorization' : `Bearer ${localStorage.getItem('token')}`
@@ -194,7 +197,7 @@
 
     function updatetime(hours, minutes) {
         let timeRemaining = hours * 60 + minutes ;
-        fetch(`http://localhost:3000/api/user/updateTimer/${examId}`, {
+        fetch(`http://localhost:3000/api/user/updateTimer/${token}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json' ,
@@ -220,7 +223,7 @@
     })
 
     function finalSubmitFunction() {
-        fetch(`http://localhost:3000/api/user/submitTest/${examId}`, {
+        fetch(`http://localhost:3000/api/user/submitTest/${token}`, {
         method: 'GET',
         headers: {
             'Authorization' : `Bearer ${localStorage.getItem('token')}`
@@ -280,14 +283,13 @@
         let question_id = document.getElementById(`section${givenSection}question${givenQuestion}optionsblock`).parentElement.id ;
         answerMap.set(question_id, value) ;
         if(optionNumber == -1) {
-            fetch(`http://localhost:3000/api/user/submitAnswer/${question_id}`, {
+            fetch(`http://localhost:3000/api/user/submitAnswer/${token}/${question_id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json' ,
                 'Authorization' : `Bearer ${localStorage.getItem('token')}`
             },
             body: JSON.stringify({
-                examId : examId,
                 answer : value,
                 type : 0
             })
@@ -314,14 +316,13 @@
         }
         // let question_id = document.getElementById(`section${givenSection}question${givenQuestion}optionsblock`).parentElement.id ;
         // alert(question_id) ;
-        fetch(`http://localhost:3000/api/user/submitAnswer/${question_id}`, {
+        fetch(`http://localhost:3000/api/user/submitAnswer/${token}/${question_id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json' ,
                 'Authorization' : `Bearer ${localStorage.getItem('token')}`
             },
             body: JSON.stringify({
-                examId : examId,
                 answer : value,
                 type : type
             })
@@ -390,6 +391,47 @@ document.getElementById("sectionsBlock").addEventListener("click", (e) => {
         displayQuestion() ;
     }
 })
+
+document.getElementById("reset").addEventListener("click", () => {
+    resetFunction(section, question) ;
+})
+
+function resetFunction(givenSection, givenQuestion) {
+    let x = document.getElementById(`section${givenSection}question${givenQuestion}optionsblock`).childElementCount ;
+    let value = "" ;
+    let optionNumber = -1 ;
+    for(let i=0;i<x;i++) {
+        let element = document.getElementById(`section${givenSection}question${givenQuestion}option${i}`) ;
+        if(element.checked) {
+            element.checked = false ;
+            // value = element.value ;
+            // optionNumber = i ;
+        }
+    }
+    let question_id = document.getElementById(`section${givenSection}question${givenQuestion}optionsblock`).parentElement.id ;
+    answerMap.set(question_id, value) ;
+    fetch(`http://localhost:3000/api/user/submitAnswer/${token}/${question_id}`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json' ,
+        'Authorization' : `Bearer ${localStorage.getItem('token')}`
+    },
+    body: JSON.stringify({
+        answer : value,
+        type : 0
+    })
+    })
+    .then(response => response.json()) // Parse JSON response
+    .then(data => {
+    console.log('Success:', data);
+    })
+    .catch(error => {
+    console.error('Error:', error);
+    alert("question data not saved successfully") ;
+    });
+    document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "blue" ;
+    return ;
+    }
 
 </script>
 

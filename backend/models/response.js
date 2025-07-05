@@ -21,8 +21,8 @@ let responseSchema = new mongoose.Schema({
         type : String,
         required : true
     },
-    marks : {
-        type : Number
+    correct : {
+        type : Boolean
     },
     type : {
         type : Number,
