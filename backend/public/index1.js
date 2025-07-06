@@ -236,16 +236,16 @@ async function submitFunction() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(question)
     })
-        .then(response => {
-            if (!response.ok) throw new Error('Request failed');
-            return response.json();
-        })
-        .then(data => {
-            console.log('Response:', data);
-            buttonsDisabled = false;
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert("Internal Server Error");
-        });
+    .then(response => {
+        if (!response.ok) throw new Error('Request failed');
+        return response.json();
+    })
+    .then(data => {
+        console.log('Response:', data);
+        buttonsDisabled = false;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("Internal Server Error");
+    });
 }

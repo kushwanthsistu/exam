@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Internal Server Error, unable to load the details. try refreshing the page")
     });
 })
+
 function displayCompletedData(data) {
     console.log(data) ;
     let parent = document.getElementById("completedBlock") ;
@@ -59,7 +60,7 @@ function displayCompletedData(data) {
                     
                     <div class="row">
                         <div class="d-flex justify-content-center col-12 mt-3">
-                            <button class="btn btn-warning statusButtons" id="${data[i].examId}">View Statistics</button>    
+                            <button class="btn btn-warning startButtons" id="${data[i].examId}">View Statistics</button>    
                         </div>
                     </div>
                 </div>
@@ -112,25 +113,27 @@ document.getElementById("completedBlock").addEventListener("click", (e) => {
             return res.json() ;
         })
         .then(data => {
-            // alert(data.data) ;
-            window.location.href = `http://localhost:3000/api/user/analysis/${data.data}` ;
+            //alert(data.data) ;
+            window.open(`http://localhost:3000/api/user/analysis/${data.data}`, '_blank');
+            //window.location.href = `http://localhost:3000/api/user/analysis/${data.data}` ;
         })
         .catch(err => {
             // console.log(error) ;
             alert("Internal Server Error, unable to load the details. try refreshing the page")
         });
     }
-})    
+})
+
 document.getElementById("pendingBlock").addEventListener("click", (e) => {
     if(e.target.classList.contains("startButtons")) {
         let examId = e.target.id ;
         // console.log(examId) ;
         // alert(`http://localhost:3000/api/user/authenticateForTest/${examId}`) ;
         fetch(`http://localhost:3000/api/user/authenticateForTest/${examId}`, {
-        method: 'GET',
-        headers: {
-            'Authorization' : `Bearer ${localStorage.getItem('token')}`
-        }
+            method: 'GET',
+            headers: {
+                'Authorization' : `Bearer ${localStorage.getItem('token')}`
+            }
         })
         .then(res => {
             // console.log("working till here") ;

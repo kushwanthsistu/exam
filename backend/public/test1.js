@@ -188,6 +188,7 @@ document.getElementById("section0Questions").classList.remove('d-none');
 document.getElementById("section0Questions").classList.add('d-flex');
 let section = 0 ;
 let question = 0 ;
+
 document.getElementById("previous").addEventListener('click', async(req, res) => {
     saveQuestion(1, section, question) ;
     if(question == 0) {
