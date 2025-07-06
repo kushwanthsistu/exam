@@ -49,7 +49,7 @@ function displayData(data) {
     }
 }) */
 
-// Delegate click events
+// Delegate click events - Edit button and Delete button
 document.getElementById("draftsContainer").addEventListener('click', async (e) => {
     if (e.target.classList.contains("editButton")) {
         //window.location.href = `http://localhost:3000/api/admin/editTest/${e.target.id}`;

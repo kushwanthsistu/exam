@@ -83,7 +83,7 @@ function displayPendingData(data) {
 
                     <div class="row">
                         <div class="d-flex justify-content-center col-12 mt-3">
-                            <button class="btn btn-primary startButtons" id="${data[i].examId}">Take Test</button>
+                            <button class="btn btn-primary startButtons" id="${data[i].examId}">Resume Test</button>
                         </div>
                     </div>
                 </div>
