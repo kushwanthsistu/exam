@@ -75,7 +75,8 @@ document.getElementById("uploadButton").addEventListener("click", () => {
         .then(data => {
             if (data.status) {
                 alert("Paper is uploaded successfully");
-                window.location.href = "/home.html";
+                // I want it to redirect to frontend/admin/home.html
+                window.location.href = "/frontend/admin/home.html";
             } else {
                 alert(data.message);
             }
