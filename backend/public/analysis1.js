@@ -83,40 +83,31 @@ document.getElementById("questionButtonsBlock").addEventListener('click', (e) =>
         //document.getElementById(`section${section}question${question}`).style.display = "block" ;
         document.getElementById(`section${section}question${question}`).classList.remove("d-none");
         document.getElementById(`section${section}question${question}`).classList.add("d-flex");
-        
+ 
         if(storeddata.includes(id)) {
-            return ;
+            return;
         }
         fetch(`http://localhost:3000/api/user/getAnswers/${token}/${id}`, {
-        method: 'GET',
+            method: 'GET',
         })
         .then(res => {
-            if(res.status == 500) {
-                throw new Error("Internal server Error") ;
+            if (res.status == 500) {
+                throw new Error("Internal server Error");
             }
-            return res.json() ;
+            return res.json();
         })
         .then(data => {
-            if(!data.status) {
-                document.getElementById(`section${section}question${question}answer`).innerHTML = "not answered" ;
-                return ;
+            const markedAnswerInput = document.getElementById(`section${section}question${question}markedAnswer`);
+            if (!data.status || !data.data.answer) {
+                markedAnswerInput.value = "Not answered";
+            } else {
+                markedAnswerInput.value = data.data.answer;
             }
-            data = data.data ;
-            if(data.type == 2) {
-                document.getElementById(`section${section}question${question}marked`).innerHTML = "Marked For Review" ;
-            } 
-            console.log(data.answer) ;
-            if(data.answer) {
-                document.getElementById(`section${section}question${question}answer`).innerHTML = `answered : ${data.answer}` ;
-            }
-            else {
-                document.getElementById(`section${section}question${question}answer`).innerHTML = "not answered" ;
-            }
-            storeddata.push(id) ;
+            storeddata.push(id);
         })
         .catch(err => {
-            console.log(error) ;
-            alert("Internal Server Error, unable to load the details. try refreshing the page")
+            console.log(err);
+            alert("Internal Server Error, unable to load the details. Try refreshing the page.");
         });
     }
 })

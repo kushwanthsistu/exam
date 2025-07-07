@@ -85,7 +85,7 @@
                                 <div class="row mb-2 w-100 px-3 py-1">
                                     <label for="markedAnswer" class="col-12">Marked Answer</label>
                                     <div>
-                                        <input type="text" id="markedAnswer" class="form-control col-12" value="<%= questions[i][j].markedAnswer || 'Not answered' %>" required readonly>
+                                        <input type="text" id="<%= `section${i}question${j}markedAnswer` %>" class="form-control col-12" value="<%= questions[i][j].markedAnswer || 'Not answered' %>" required readonly>
                                     </div>
                                 </div>
 
