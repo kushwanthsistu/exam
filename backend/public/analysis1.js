@@ -21,10 +21,14 @@ document.addEventListener("DOMContentLoaded", () => {
         let correctAnswers = data.data.correctAnswers ;
         let wrongAnswers = data.data.wrongAnswers ;
         for(let i=0;i<correctAnswers.length;i++) {
-            document.getElementById(`${correctAnswers[i]}button`).style.backgroundColor = "green" ;
+            //document.getElementById(`${correctAnswers[i]}button`).style.backgroundColor = "green" ;
+            document.getElementById(`${correctAnswers[i]}button`).classList.remove("btn-secondary");
+            document.getElementById(`${correctAnswers[i]}button`).classList.add("btn-success");
         }
         for(let i=0;i<wrongAnswers.length;i++) {
-            document.getElementById(`${wrongAnswers[i]}button`).style.backgroundColor = "red" ;
+            //document.getElementById(`${wrongAnswers[i]}button`).style.backgroundColor = "red" ;
+            document.getElementById(`${wrongAnswers[i]}button`).classList.remove("btn-secondary");
+            document.getElementById(`${wrongAnswers[i]}button`).classList.add("btn-danger");
         }
     })
     .catch(err => {
@@ -39,15 +43,23 @@ document.getElementById("sectionsBlock").addEventListener("click", (e) => {
         let id = e.target.id ;
         let num = id.match(/\d+/);
         if(section != -1) {
-            document.getElementById(`section${section}`).style.backgroundColor = "white" ;
-            document.getElementById(`section${section}Questions`).style.display = "none" ;
+            //document.getElementById(`section${section}`).style.backgroundColor = "white" ;
+            document.getElementById(`section${section}`).classList.remove("active");
+            //document.getElementById(`section${section}Questions`).style.display = "none" ;
+            document.getElementById(`section${section}Questions`).classList.remove("d-flex");
+            document.getElementById(`section${section}Questions`).classList.add("d-none");
         }
         if(question != -1) {
-            document.getElementById(`section${section}question${question}`).style.display = "none" ;
+            //document.getElementById(`section${section}question${question}`).style.display = "none" ;
+            document.getElementById(`section${section}question${question}`).classList.remove("d-flex");
+            document.getElementById(`section${section}question${question}`).classList.add("d-none");
         }
         section = num ;
-        document.getElementById(`section${section}`).style.backgroundColor = "yellow" ;
-        document.getElementById(`section${section}Questions`).style.display = "block" ;
+        //document.getElementById(`section${section}`).style.backgroundColor = "yellow" ;
+        document.getElementById(`section${section}`).classList.add("active");
+        //document.getElementById(`section${section}Questions`).style.display = "block" ;
+        document.getElementById(`section${section}Questions`).classList.remove("d-none");
+        document.getElementById(`section${section}Questions`).classList.add("d-flex");
     }
 })
 
@@ -59,13 +71,19 @@ document.getElementById("questionButtonsBlock").addEventListener('click', (e) =>
             return ;
         }
         if(question != -1) {
-            document.getElementById(`section${section}question${question}`).style.display = "none" ;
+            //document.getElementById(`section${section}question${question}`).style.display = "none" ;
+            document.getElementById(`section${section}question${question}`).classList.remove("d-flex");
+            document.getElementById(`section${section}question${question}`).classList.add("d-none");
         }
         let id = e.target.id.match(/^([a-f0-9]{24})button$/)[1];
         let str = e.target.parentElement.id ;
         section = parseInt(str.split("section")[1].split("question")[0]);
         question = parseInt(str.split("question")[1].split("button")[0]);
-        document.getElementById(`section${section}question${question}`).style.display = "block" ;
+
+        //document.getElementById(`section${section}question${question}`).style.display = "block" ;
+        document.getElementById(`section${section}question${question}`).classList.remove("d-none");
+        document.getElementById(`section${section}question${question}`).classList.add("d-flex");
+        
         if(storeddata.includes(id)) {
             return ;
         }

@@ -52,13 +52,73 @@
         </div>
     </div>
 
-    <div id="questionBlock" class="d-flex flex-column flex-grow-1 h-100 overflow-auto" style="min-height: 0;">
+    <div id="questionBlock" class="d-flex flex-column flex-grow-1 h-100 overflow-auto" style="min-height: 0;"> 
+        <div class="d-flex flex-column flex-grow-1 overflow-auto" style="overflow-y: auto; overflow-x: hidden; min-height:0;">
+            <% for(let i = 0 ; i < questions.length ; i++) { %>
+                <div id="<%= `section${i}` %>">
+                    <% for(let j = 0 ; j < questions[i].length ; j++) { %>
+                        <div id="<%= `section${i}question${j}` %>" class="d-none flex-column flex-grow-1 overflow-auto" style="overflow-y: auto; overflow-x: hidden; min-height:0;">
+                            <div id="<%= questions[i][j]._id %>">
 
+                                <!-- Question Statement -->
+                                <div class="row mb-2 w-100 px-3 py-1">
+                                    <label for="questionStatement" class="col-12">Question</label>
+                                    <div>
+                                        <textarea id="questionStatement" class="form-control col-12" rows="3" required readonly><%= questions[i][j].statement %></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Options -->
+                                <div class="row mb-2 w-100 px-3 py-1">
+                                    <label for="options" class="form-label">Options</label>
+                                    <div id="options" class="row mb-2 w-100 px-4 py-1">
+                                        <% for(let k = 0 ; k < questions[i][j].options.length ; k++) { %>
+                                            <div class="form-check mb-2 col-12 w-100">
+                                                <input class="form-check-input" type="radio" id="<%= `section${i}question${j}option${k}` %>" disabled <%= questions[i][j].correctAnswer === questions[i][j].options[k] ? 'checked' : '' %>>
+                                                <label class="form-check-label" for="<%= `section${i}question${j}option${k}` %>" style="opacity: 1;"> <%= questions[i][j].options[k] %> </label>
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                </div>
+
+                                <!-- Marked Answer -->
+                                <div class="row mb-2 w-100 px-3 py-1">
+                                    <label for="markedAnswer" class="col-12">Marked Answer</label>
+                                    <div>
+                                        <input type="text" id="markedAnswer" class="form-control col-12" value="<%= questions[i][j].markedAnswer || 'Not answered' %>" required readonly>
+                                    </div>
+                                </div>
+
+                                <!-- Correct Answer -->
+                                <div class="row mb-2 w-100 px-3 py-1">
+                                    <label for="correctAnswer" class="col-12">Correct Answer</label>
+                                    <div>
+                                        <input type="text" id="correctAnswer" class="form-control col-12" value="<%= questions[i][j].correctAnswer %>" required readonly>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                    <% } %>
+                </div>
+            <% } %>            
+        </div>
+
+
+        <div class="row w-100 auto">
+            <div class="col-6 d-flex justify-content-center mb-2">
+                <button id="previous" type="button" class="btn btn-secondary" style="height:60px;">Previous</button>
+            </div>
+
+            <div class="col-6 d-flex justify-content-center mb-2">
+                <!-- should create a new api for this -->
+                <button id="next" type="button" class="btn btn-secondary" style="height:60px;">Next</button>
+            </div>
+        </div>
     </div>
 
-    <div class="bottom-part row bg-dark p-2">
+    <div class="row bg-dark p-2">
         <div class="col-12 d-flex justify-content-center mb-2">
-            <button id="uploadButton" type="button" class="btn btn-primary">Launch Test</button>
+            <button id="uploadButton" type="button" class="btn btn-danger">Close</button>
         </div>
     </div>
 </body>

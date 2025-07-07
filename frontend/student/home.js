@@ -69,7 +69,8 @@ document.getElementById("examsContainer").addEventListener("click", (e) => {
         })
         .then(data => {
             // alert(data.data) ;
-            window.location.href = `http://localhost:3000/api/user/takeTest/${data.data}` ;
+            //window.location.href = `http://localhost:3000/api/user/takeTest/${data.data}` ;
+            window.open(`http://localhost:3000/api/user/takeTest/${data.data}`, "_blank");
         })
         .catch(err => {
             // console.log(error) ;
