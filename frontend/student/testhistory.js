@@ -124,27 +124,28 @@ document.getElementById("completedBlock").addEventListener("click", (e) => {
                 const modalInstance = new bootstrap.Modal(modalElement);
                 modalInstance.show();
 
+                // Chatgpt code
                 modalElement.addEventListener('hidden.bs.modal', () => {
-                const iframe = document.getElementById(`analysisIframe-${examId}`);
-                if (iframe) {
-                    iframe.src = 'about:blank'; // Fully unload iframe
-                    iframe.blur();
-                }
+                    const iframe = document.getElementById(`analysisIframe-${examId}`);
+                    if (iframe) {
+                        iframe.src = 'about:blank'; // Fully unload iframe
+                        iframe.blur();
+                    }
 
-                // Reset scroll and focus
-                document.activeElement.blur();
-                document.body.focus();
+                    // Reset scroll and focus
+                    document.activeElement.blur();
+                    document.body.focus();
 
-                // Reset modal-related classes and styles
-                document.body.classList.remove('modal-open');
-                document.body.style.overflow = '';
-                document.body.style.paddingRight = '';
-                document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+                    // Reset modal-related classes and styles
+                    document.body.classList.remove('modal-open');
+                    document.body.style.overflow = '';
+                    document.body.style.paddingRight = '';
+                    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
 
-                // This ensures scroll is fully restored
-                setTimeout(() => {
-                    document.body.style.overflowY = 'auto';
-                }, 100); // Small delay to avoid race with Bootstrap cleanup
+                    // This ensures scroll is fully restored
+                    setTimeout(() => {
+                        document.body.style.overflowY = 'auto';
+                    }, 100); // Small delay to avoid race with Bootstrap cleanup
                 }, { once: true });
             } else {
                 alert("Modal not found for this exam.");
