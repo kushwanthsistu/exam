@@ -173,6 +173,7 @@ function finalSubmitFunction() {
     })
     .then(data => {
         alert("test is done") ;
+        window.close();
     })
     .catch(err => {
         // console.log(error) ;
@@ -377,6 +378,7 @@ function resetFunction(givenSection, givenQuestion) {
             // optionNumber = i ;
         }
     }
+    
     let question_id = document.getElementById(`section${givenSection}question${givenQuestion}optionsblock`).parentElement.id ;
     answerMap.set(question_id, value) ;
     fetch(`http://localhost:3000/api/user/submitAnswer/${token}/${question_id}`, {
@@ -398,6 +400,10 @@ function resetFunction(givenSection, givenQuestion) {
         console.error('Error:', error);
         alert("question data not saved successfully") ;
     });
-    document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "blue" ;
+    
+    //document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "blue" ;
+    document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].classList.remove("btn-success");
+    document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].classList.add("btn-secondary");
+    
     return ;
 }
