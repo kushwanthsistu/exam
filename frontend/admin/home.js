@@ -12,7 +12,7 @@ function createStructure(data, container, status) {
         <div class="card">
             <h1 class="card-title ${status ? 'bg-primary' : 'bg-secondary'} text-white rounded">${data[i].title}</h1>
             <div class="card-body">
-                <p>Duration: HH:MM:SS </p>
+                <p>Duration: ${data[i].timeDuration} </p>
 
                 <div class="row">
                     <div class="d-flex justify-content-center col-12 col-lg-4 mt-3">

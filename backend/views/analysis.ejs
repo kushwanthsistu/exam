@@ -30,33 +30,37 @@
     <div id="questionBlock">
         <% for(let i = 0 ; i < questions.length ; i++) { %>
             <div id="<%= `section${i}` %>">
-            <% for(let j = 0 ; j < questions[i].length ; j++) { %> 
-                <div id="<%= `section${i}question${j}` %>" style="display: none ;">
-                <div id="<%= questions[i][j]._id %>">
-                    <h4 id="<%= `section${i}question${j}statement` %>"><%= questions[i][j].statement %></h4>
-                    <div id="<%= `section${i}question${j}optionsblock` %>">
-                        <% for(let k = 0 ; k < questions[i][j].options.length ; k++) { %>
-                            <div>
-                            <!-- <input type="radio" name="<%= `section${i}question${j}options` %>" value="<%= questions[i][j].options[k] %>" id="<%= `section${i}question${j}option${k}` %>"> -->
-                            <%= k+1 %>.<%= questions[i][j].options[k] %><br>
+                <% for(let j = 0 ; j < questions[i].length ; j++) { %> 
+                    <div id="<%= `section${i}question${j}` %>" style="display: none ;">
+                        <div id="<%= questions[i][j]._id %>">
+                            <h4 id="<%= `section${i}question${j}statement` %>"><%= questions[i][j].statement %></h4>
+                            <div id="<%= `section${i}question${j}optionsblock` %>">
+                                <% for(let k = 0 ; k < questions[i][j].options.length ; k++) { %>
+                                    <div>
+                                        <!-- <input type="radio" name="<%= `section${i}question${j}options` %>" value="<%= questions[i][j].options[k] %>" id="<%= `section${i}question${j}option${k}` %>"> -->
+                                        <%= k+1 %>.<%= questions[i][j].options[k] %><br>
+                                    </div>
+                                <% } %>
                             </div>
-                        <% } %>
-                    </div>
-                    <div id=<%= `section${i}question${j}correctAnswer` %>>
-                        correctAnswer : <%= questions[i][j].correctAnswer %>
-                    </div>
-                    <div id=<%= `section${i}question${j}answer` %>>
 
-                    </div>
-                    <div id=<%= `section${i}question${j}marked` %>>
+                            <div id=<%= `section${i}question${j}correctAnswer` %>>
+                                correctAnswer : <%= questions[i][j].correctAnswer %>
+                            </div>
 
+                            <div id=<%= `section${i}question${j}answer` %>>
+
+                            </div>
+                            
+                            <div id=<%= `section${i}question${j}marked` %>>
+
+                            </div>
+                        </div>
                     </div>
-                </div>
-                </div>
-            <% } %>
-        <% } %>
+                <% } %>
             </div>
+        <% } %>
     </div>
+</div>
 <script>
     const parts = window.location.href.split("/") ;
     const token = parts[parts.length - 1] ; 
