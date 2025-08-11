@@ -1,3 +1,7 @@
+if(!localStorage.getItem("token")) {
+    window.location.href = "./login.html";
+}
+
 // syam's update
 function createStructure(data, container, status) {
     data = data.data ;
@@ -14,13 +18,11 @@ function createStructure(data, container, status) {
             <div class="card-body">
                 <p>Duration: ${data[i].timeDuration} </p>
 
-                <div class="row">
-                    <div class="d-flex justify-content-center col-12 col-lg-4 mt-3">
-                        <button class="btn btn-info">Edit Test</button>
-                    </div>
+                <div class="row justify-content-center">
+                    
 
                     <div class="d-flex justify-content-center col-12 col-lg-4 mt-3">
-                        <button class="btn btn-warning statusButtons">View Statistics</button>    
+                        <button class="btn btn-warning statusButtons statisticsButton" id=${data[i]._id}statistics>View Statistics</button>    
                     </div>
 
                     <div class="d-flex justify-content-center col-12 col-lg-4 mt-3">
@@ -44,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // container.appendChild(colDiv);
     })
     .catch(error => {
-        console.error("Error fetching data:", error);
+        window.location.href = "./ISE.html" ;
     });
 
     fetch('http://localhost:3000/api/admin/getDisabledTests')
@@ -57,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // container.appendChild(colDiv);
     })
     .catch(error => {
-        console.error("Error fetching data:", error);
+        window.location.href = "./ISE.html";
     });
 
 
@@ -75,6 +77,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 location.reload() ;
             })
         }
+        if(e.target && e.target.classList.contains("statisticsButton")) {
+            alert("correct button is pressed") ;
+        }
     });
 
     // Delegate clicks from expiredExamContainer
@@ -90,6 +95,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             .then(data => {
                 location.reload() ;
             })
+        }
+        if(e.target && e.target.classList.contains("statisticsButton")) {
+            alert("correct button is pressed") ;
         }
     });
 });
