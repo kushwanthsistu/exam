@@ -44,7 +44,7 @@
                     </div>
                     
                     <div class="col-12 col-sm-8">
-                        <p>Syam SriBalaji T</p>
+                        <p></p>
                     </div>
                 </div>
 
@@ -54,12 +54,12 @@
                     </div>
                     
                     <div class="col-12 col-sm-8">
-                        <p>syamsribalaji@gmail.com</p>
+                        <p></p>
                     </div>
                 </div>
 
                 <div class="row d-flex justify-content-center  mt-3">
-                    <button class="btn btn-danger w-auto" onclick="location.href='login.html'">Log out</button>
+                    <button class="btn btn-danger w-auto" id="logoutButton">Log out</button>
                 </div>
 
                 <!-- <div class="row mt-5 bg-dark text-white rounded">
@@ -92,4 +92,12 @@
             </div>
         </div>
     </main>
+
+<script>
+    document.getElementById("logoutButton").addEventListener("click", () => {
+        localStorage.removeItem("token") ;
+        window.location.href = "./login.html";
+    })
+</script>
+
 </body>

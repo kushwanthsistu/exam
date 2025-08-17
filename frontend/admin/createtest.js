@@ -1,3 +1,7 @@
+if(!localStorage.getItem("token")) {
+    window.location.href = "./login.html";
+}
+
 // syam's update
 // added deleteTest api
 
@@ -26,13 +30,6 @@ function displayData(data) {
                             <button type="button" class="btn btn-info editButton" id=${data[i]._id} data-bs-toggle="modal" data-bs-target="#editTest">Edit Test</button>
                         </div>
 
-                        <div class="col-12 col-md-6 d-grid mt-2 d-flex justify-content-center">
-                            <button type="button" class="btn btn-danger deleteButton" id=${data[i]._id}>Delete Test</button>
-                        </div>
-
-                        <div class="col-12 d-grid mt-2 d-flex justify-content-center">
-                            <button type="button" class="btn btn-success">Launch Test</button>
-                        </div>
                     </div>
 
                 </div>
@@ -58,6 +55,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         displayData(data.data) ;
     })
     .catch(error => {
-        console.error("Error fetching data:", error);
+        window.location.href = "./ISE.html" ;
     });
 }) ;
