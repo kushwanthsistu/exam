@@ -1,5 +1,10 @@
-document.querySelector("form").addEventListener("submit", (event) => {
-    event.preventDefault();  // Prevent form's default behavior
+import { FRONTEND_URL, BACKEND_URL } from "../config.js";
+
+const form = document.querySelector("form");
+const loader = document.getElementById("loader");
+
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
 
     const userName = document.getElementById("userName").value.trim();
     const userEmail = document.getElementById("userEmail").value.trim();
@@ -19,8 +24,10 @@ document.querySelector("form").addEventListener("submit", (event) => {
         return;
     }
 
-    // mockPromise(userEmail)
-    fetch('http://localhost:3000/api/authenticate/signup', {
+    // Show loader
+    loader.classList.remove("d-none");
+
+    fetch(`${BACKEND_URL}/api/authenticate/signup`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -30,7 +37,7 @@ document.querySelector("form").addEventListener("submit", (event) => {
             emailId: userEmail,
             password: userPassword
         })
-    })    
+    })
     .then(response => {
         if (!response.ok) {
             return response.json().then(errData => {
@@ -44,8 +51,6 @@ document.querySelector("form").addEventListener("submit", (event) => {
             alert(data.message);
             localStorage.setItem('token', data.token);
             window.location.href = "home.html";
-
-            // Add to database
         } else {
             alert(data.message || "Sign up failed");
         }
@@ -53,46 +58,9 @@ document.querySelector("form").addEventListener("submit", (event) => {
     .catch(error => {
         console.error("Error:", error);
         alert(error.message);
+    })
+    .finally(() => {
+        // Hide loader when request is done (success or error)
+        loader.classList.add("d-none");
     });
 });
-
-/* 
-// Separate mockPromise function
-function mockPromise(email) {
-    return new Promise((resolve) => {
-        let mockResponse;
-
-        if (email === "exists@example.com") {
-            // Simulate email already exists
-            mockResponse = {
-                ok: false,
-                json: () => Promise.resolve({
-                    code: 1001,
-                    status: false,
-                    message: "Email id already exists"
-                })
-            };
-        } else if (email === "servererror@example.com") {
-            // Simulate internal server error
-            mockResponse = {
-                ok: false,
-                json: () => Promise.resolve({
-                    status: false,
-                    message: "Internal Server Error"
-                })
-            };
-        } else {
-            // Simulate successful signup
-            mockResponse = {
-                ok: true,
-                json: () => Promise.resolve({
-                    status: true,
-                    message: "User signed up successfully",
-                    token: "mock-jwt-token"
-                })
-            };
-        }
-
-        setTimeout(() => resolve(mockResponse), 500); // Simulate network delay
-    });
-} */

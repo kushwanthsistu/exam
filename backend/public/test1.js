@@ -1,14 +1,15 @@
 const parts = window.location.href.split("/");
 const token = parts[parts.length - 1];
-//document.getElementById(`section${0}`).style.backgroundColor = "yellow" ;
+console.log(token) ;
 document.getElementById(`section${0}`).classList.remove('btn-secondary');
 document.getElementById(`section${0}`).classList.add('btn-primary');
 
 let answerMap;
+let questionStatus = new Map() ;
 
 document.addEventListener("DOMContentLoaded", async () => {
     // alert(token);
-    fetch(`http://localhost:3000/api/user/getOptions/${token}`, {
+    fetch(`${BACKEND_URL}/api/user/getOptions/${token}`, {
     method: 'GET',
     headers: {
         'Authorization' : `Bearer ${localStorage.getItem('token')}`
@@ -21,6 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return res.json() ;
     })
     .then(data => {
+        console.log(data.data) ;
         answerMap = new Map(data.data) ;
         console.log(answerMap) ;
         displayQuestion() ;
@@ -30,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         alert("Internal Server Error, unable to load the details. try refreshing the page")
     });
     
-    fetch(`http://localhost:3000/api/user/getButtonsStatus/${token}`, {
+    fetch(`${BACKEND_URL}/api/user/getButtonsStatus/${token}`, {
     method: 'GET',
     headers: {
         'Authorization' : `Bearer ${localStorage.getItem('token')}`
@@ -44,27 +46,37 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
     .then(data => {
         data = data.data ;
+        // console.log(data) ;
+        // questionStatus = new Map(data) ;
+        // console.log(questionStatus) ;
         console.log(data) ;
         for(let i=0;i<data.length;i++) {
-            if(data[i].type == 1) {
-                //document.getElementById(`${data[i].questionId}button`).style.backgroundColor = "green" ;
-                document.getElementById(`${data[i].questionId}button`).classList.remove('btn-secondary');
-                document.getElementById(`${data[i].questionId}button`).classList.remove('btn-success');
+            questionStatus.set(data[i].questionId, data[i].type) ;
+            if(data[i].type == 0) {
+                document.getElementById(`${data[i].questionId}button`).classList.add('btn-secondary');
             }
-            else {
-                //document.getElementById(`${data[i].questionId}button`).style.backgroundColor = "purple" ;
-                document.getElementById(`${data[i].questionId}button`).classList.add('flagged');
+            else if(data[i].type == 1) {
+                document.getElementById(`${data[i].questionId}button`).classList.remove('btn-danger') ;
+                document.getElementById(`${data[i].questionId}button`).classList.add('btn-success') ;
             }
-            //document.getElementById(`section${0}question${0}button`).childNodes[1].style.backgroundColor = "blue" ;
+            else if(data[i].type == 2) {
+                document.getElementById(`${data[i].questionId}button`).classList.add('flagged') ;
+            }
+            else if(data[i].type == 3){
+                document.getElementById(`${data[i].questionId}button`).classList.add('flagged') ;
+                document.getElementById(`${data[i].questionId}button`).classList.add('btn-success') ;
+            }
+            
             document.getElementById(`section${0}question${0}button`).childNodes[1].classList.add('active');
         }
+        console.log(questionStatus) ;
     })
     .catch(err => {
         // console.log(error) ;
         alert("Internal Server Error, unable to load the details. try refreshing the page")
     });
     
-    fetch(`http://localhost:3000/api/user/getTimer/${token}`, {
+    fetch(`${BACKEND_URL}/api/user/getTimer/${token}`, {
     method: 'GET',
     headers: {
         'Authorization' : `Bearer ${localStorage.getItem('token')}`
@@ -83,8 +95,56 @@ document.addEventListener("DOMContentLoaded", async () => {
         // console.log(error) ;
         alert("Internal Server Error, unable to load the details. try refreshing the page")
     });
+})
 
+document.getElementById("questionBlock").addEventListener("click", (e) => {
+    if(e.target.classList.contains("form-check-input")) {
+        // alert("working") ;
+        let x = document.getElementById(`section${section}question${question}optionsblock`).childElementCount ;
+        let value = "" ;
+        let optionNumber = -1 ;
+        for(let i=0;i<x;i++) {
+        let element = document.getElementById(`section${section}question${question}option${i}`) ;
+        if(element.checked) {
+            value = element.value ;
+            optionNumber = i ;
+        }
+        }
+        let question_id = document.getElementById(`section${section}question${question}optionsblock`).parentElement.id ;
+        if(answerMap.has(question_id)) {
+            let y = answerMap.get(question_id) ;
+            if(y == value) {
+                return ;
+            }
+        }
 
+        document.getElementById(`section${section}question${question}button`).childNodes[1].classList.remove('btn-danger');
+        document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('btn-success');
+        let z = 1 ;
+        if(questionStatus.has(question_id) && (questionStatus.get(question_id) == 2 || questionStatus.get(question_id) == 3)) {
+            z = 3 ;
+        }
+        questionStatus.set(question_id, z) ;
+        fetch(`${BACKEND_URL}/api/user/submitAnswer/${token}/${question_id}`, {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json' ,
+            'Authorization' : `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+                answer : value,
+                type : z
+            })
+            })
+        .then(response => response.json()) // Parse JSON response
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("question data not saved successfully") ;
+        });
+    }
 })
 
 let hours = 0 ;
@@ -133,7 +193,7 @@ function setTimer(time) {
 
 function updatetime(hours, minutes) {
     let timeRemaining = hours * 60 + minutes ;
-    fetch(`http://localhost:3000/api/user/updateTimer/${token}`, {
+    fetch(`${BACKEND_URL}/api/user/updateTimer/${token}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json' ,
@@ -159,7 +219,7 @@ document.getElementById("submitButton").addEventListener("click", ()=> {
 })
 
 function finalSubmitFunction() {
-    fetch(`http://localhost:3000/api/user/submitTest/${token}`, {
+    fetch(`${BACKEND_URL}/api/user/submitTest/${token}`, {
     method: 'GET',
     headers: {
         'Authorization' : `Bearer ${localStorage.getItem('token')}`
@@ -181,122 +241,93 @@ function finalSubmitFunction() {
     });
 }
 
-//document.getElementById("section0Questions").style.display = "block" ;
 document.getElementById("section0Questions").classList.remove('d-none');
 document.getElementById("section0Questions").classList.add('d-flex');
 let section = 0 ;
 let question = 0 ;
 
-document.getElementById("previous").addEventListener('click', async(req, res) => {
-    saveQuestion(1, section, question) ;
+document.getElementById("previous").addEventListener("click", async() => {
+    document.getElementById(`section${section}question${question}button`).childNodes[1].classList.remove('active');
+
     if(question == 0) {
-        //document.getElementById(`section${section}question${question}button`).childNodes[1].style.backgroundColor = "blue" ;
         document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('active');
-        return 0 ;
+        return;
     }
-    document.getElementById(`section${section}question${question}`).style.display = "none" ;
-    question = question - 1 ;
-    displayQuestion() ;
-})
+
+    document.getElementById(`section${section}question${question}`).style.display = "none";
+    question = question - 1;
+
+    document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('active');
+
+    displayButton(section, question);
+    displayQuestion();
+});
+
+document.getElementById("next").addEventListener("click", async() => {
+    let x = document.getElementById(`section${section}Questions`).childElementCount;
+    document.getElementById(`section${section}question${question}button`).childNodes[1].classList.remove('active');
+
+    if(question == x - 1) {
+        document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('active');
+        return;
+    }
+
+    document.getElementById(`section${section}question${question}`).style.display = "none";
+    question = question + 1;
+
+    document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('active');
+    displayButton(section, question);
+    displayQuestion();
+});
 
 document.getElementById("markforreview").addEventListener('click', async(req, res) => {
-    saveQuestion(2, section, question) ;
-    let x = document.getElementById(`section${section}Questions`).childElementCount ;
-    if(question == x-1) {
-        //document.getElementById(`section${section}question${question}button`).childNodes[1].style.backgroundColor = "blue" ;
-        document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('active');
-        return ;
-    }
-    document.getElementById(`section${section}question${question}`).style.display = "none" ;
-    question = question + 1 ;
-    displayQuestion(document.getElementById(`section${section}question${question}button`).childNodes[1]) ;
-})
-
-function saveQuestion(type, givenSection, givenQuestion) {
-    let x = document.getElementById(`section${givenSection}question${givenQuestion}optionsblock`).childElementCount ;
-    let value = "" ;
-    let optionNumber = -1 ;
-    for(let i=0;i<x;i++) {
-        let element = document.getElementById(`section${givenSection}question${givenQuestion}option${i}`) ;
-        if(element.checked) {
-            value = element.value ;
-            optionNumber = i ;
+    let question_id = document.getElementById(`section${section}question${question}optionsblock`).parentElement.id ;
+    let x = 2 ;
+    if(questionStatus.has(question_id)) {
+        let y = questionStatus.get(question_id) ;
+        // alert(y) ;
+        if(y == 0) {
+            document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('flagged');
+            x = 2 ;
+        }
+        else if(y == 1) {
+            document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('flagged');
+            x = 3 ;
+        }
+        else if(y == 2) {
+            document.getElementById(`section${section}question${question}button`).childNodes[1].classList.remove('flagged');
+            x = 0 ;
+        }
+        else {
+            document.getElementById(`section${section}question${question}button`).childNodes[1].classList.remove('flagged');
+            x = 1 ;
         }
     }
-    let question_id = document.getElementById(`section${givenSection}question${givenQuestion}optionsblock`).parentElement.id ;
-    answerMap.set(question_id, value) ;
-    if(optionNumber == -1) {
-        fetch(`http://localhost:3000/api/user/submitAnswer/${token}/${question_id}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json' ,
-            'Authorization' : `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-            answer : value,
-            type : 0
-        })
-        })
-        .then(response => response.json()) // Parse JSON response
-        .then(data => {
-            console.log('Success:', data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert("question data not saved successfully") ;
-        });
-        //document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "white" ;
-        document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].classList.remove('active');
-        return ;
-    }
-    if(type == 1) {
-        //document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "green" ;
-        document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].classList.remove('btn-secondary');
-        document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].classList.remove('active');
-        document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].classList.add('btn-success');
-    }
-    else if(type == 2) {
-        //document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "purple" ;
-        document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].classList.add('flagged');
-    }
     else {
-        //document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "white" ;
-        document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].classList.remove('active');
+            document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('flagged');
     }
-    // let question_id = document.getElementById(`section${givenSection}question${givenQuestion}optionsblock`).parentElement.id ;
     // alert(question_id) ;
-    fetch(`http://localhost:3000/api/user/submitAnswer/${token}/${question_id}`, {
+    // alert(x) ;
+    questionStatus.set(question_id, x) ;
+
+    fetch(`${BACKEND_URL}/api/user/markforreview/${token}/${question_id}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json' ,
             'Authorization' : `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify({
-            answer : value,
-            type : type
+            type : x
         })
-        })
-        .then(response => response.json()) // Parse JSON response
-        .then(data => {
-            console.log('Success:', data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert("question data not saved successfully") ;
-        });
-}
-
-document.getElementById("saveandnext").addEventListener("click", async(req, res) => {
-    saveQuestion(1, section, question) ;
-    let x = document.getElementById(`section${section}Questions`).childElementCount ;
-    if(question == x-1) {
-        //document.getElementById(`section${section}question${question}button`).childNodes[1].style.backgroundColor = "blue" ;
-        document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('active');
-        return ;
-    }
-    document.getElementById(`section${section}question${question}`).style.display = "none" ;
-    question = question + 1 ;
-    displayQuestion() ;
+    })
+    .then(response => response.json()) // Parse JSON response
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("question data not saved successfully") ;
+    });
 })
 
 function displayQuestion() {
@@ -313,54 +344,96 @@ function displayQuestion() {
             }
         }
     }
-    //document.getElementById(`section${section}question${question}button`).childNodes[1].style.backgroundColor = "blue" ;
-    document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('active');
+    if(questionStatus.has(question_id)) {
+        let x = questionStatus.get(question_id) ;
+        // alert(x) ;
+        if(x == 0) {
+            document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('btn-danger') ;
+        }
+        else if(x == 1) {
+            document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('btn-success');
+        }
+        else if(x == 2) {
+            document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('btn-danger');
+            document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('flagged');
+        }
+        else if(x == 3) {
+            document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('btn-success');
+            document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('flagged');
+        }
+    }
+    else {
+        document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('btn-danger') ;
+    }
+    document.getElementById("question_number").innerText = `Question-${question+1}` ;
 }
-
 
 document.getElementById("questionButtonsBlock").addEventListener("click", async(e) => {
-if (e.target.classList.contains("questionButtons")){
-//if(e.target.className == "questionButtons") {
-    saveQuestion(1, section, question) ;
-    let str = e.target.parentElement.id ;
-    document.getElementById(`section${section}question${question}`).style.display = "none" ;
-    section = parseInt(str.split("section")[1].split("question")[0]);
-    question = parseInt(str.split("question")[1].split("button")[0]);
-    displayQuestion() ;
+    if (e.target.classList.contains("questionButtons")) {
+        document.getElementById(`section${section}question${question}button`).childNodes[1].classList.remove('active');
+
+        let str = e.target.parentElement.id;
+        document.getElementById(`section${section}question${question}`).style.display = "none";
+        await displayButton(section, question);
+        section = parseInt(str.split("section")[1].split("question")[0]);
+        question = parseInt(str.split("question")[1].split("button")[0]);
+
+        document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('active');
+        displayQuestion();
+    }
+});
+
+async function displayButton(section, question) {
+    let question_id = document.getElementById(`section${section}question${question}optionsblock`).parentElement.id ;
+    if(questionStatus.has(question_id)) {
+        let x = questionStatus.get(question_id) ;
+        if(x == 0) {
+            document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('btn-danger') ;
+        }
+        else if(x == 1) {
+            document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('btn-success');
+        }
+        else if(x == 2) {
+            document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('btn-danger');
+            document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('flagged');
+        }
+        else if(x == 3) {
+            document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('btn-success');
+            document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('flagged');
+        }
+    }
+    else {
+        document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('btn-danger') ;
+    }
 }
-})
 
 document.getElementById("sectionsBlock").addEventListener("click", (e) => {
-if (e.target.classList.contains("sectionButtons")) {
-//if(e.target.className == "sectionButtons") {
-    saveQuestion(1, section, question) ;
-    let str = e.target.id ;
-    const sectionNumber = parseInt(str.slice(7));
+    if (e.target.classList.contains("sectionButtons")) {
+        let str = e.target.id;
+        const sectionNumber = parseInt(str.slice(7));
 
-    //document.getElementById(`section${section}`).style.backgroundColor = "white" ;
-    document.getElementById(`section${section}`).classList.remove('btn-primary');
-    document.getElementById(`section${section}`).classList.add('btn-secondary');
-    
+        document.getElementById(`section${section}`).classList.remove('btn-primary');
+        document.getElementById(`section${section}`).classList.add('btn-secondary');
 
-    //document.getElementById(`section${section}Questions`).style.display = "none" ;
-    document.getElementById(`section${section}Questions`).classList.remove('d-flex');
-    document.getElementById(`section${section}Questions`).classList.add('d-none');
+        document.getElementById(`section${section}Questions`).classList.remove('d-flex');
+        document.getElementById(`section${section}Questions`).classList.add('d-none');
 
-    document.getElementById(`section${section}question${question}`).style.display = "none" ;
-    section = parseInt(str.slice(7));
-    question = 0 ;
-    
-    //document.getElementById(`section${section}`).style.backgroundColor = "yellow" ;
-    document.getElementById(`section${section}`).classList.remove('btn-secondary');
-    document.getElementById(`section${section}`).classList.add('btn-primary');
-    
-    //document.getElementById(`section${section}Questions`).style.display = "block" ;
-    document.getElementById(`section${section}Questions`).classList.remove('d-none');
-    document.getElementById(`section${section}Questions`).classList.add('d-flex');
-    
-    displayQuestion() ;
-}
-})
+        document.getElementById(`section${section}question${question}button`).childNodes[1].classList.remove('active');
+
+        document.getElementById(`section${section}question${question}`).style.display = "none";
+        section = parseInt(str.slice(7));
+        question = 0;
+
+        document.getElementById(`section${section}`).classList.remove('btn-secondary');
+        document.getElementById(`section${section}`).classList.add('btn-primary');
+
+        document.getElementById(`section${section}Questions`).classList.remove('d-none');
+        document.getElementById(`section${section}Questions`).classList.add('d-flex');
+
+        document.getElementById(`section${section}question${question}button`).childNodes[1].classList.add('active');
+        displayQuestion();
+    }
+});
 
 document.getElementById("reset").addEventListener("click", () => {
     resetFunction(section, question) ;
@@ -381,7 +454,7 @@ function resetFunction(givenSection, givenQuestion) {
     
     let question_id = document.getElementById(`section${givenSection}question${givenQuestion}optionsblock`).parentElement.id ;
     answerMap.set(question_id, value) ;
-    fetch(`http://localhost:3000/api/user/submitAnswer/${token}/${question_id}`, {
+    fetch(`${BACKEND_URL}/api/user/submitAnswer/${token}/${question_id}`, {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json' ,
@@ -401,9 +474,8 @@ function resetFunction(givenSection, givenQuestion) {
         alert("question data not saved successfully") ;
     });
     
-    //document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].style.backgroundColor = "blue" ;
     document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].classList.remove("btn-success");
-    document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].classList.add("btn-secondary");
+    document.getElementById(`section${givenSection}question${givenQuestion}button`).childNodes[1].classList.add("btn-danger");
     
     return ;
 }

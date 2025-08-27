@@ -62,7 +62,7 @@ document.getElementById("questionBlock").addEventListener('click', (e) => {
 
 document.getElementById("uploadButton").addEventListener("click", () => {
     submitFunction();
-    fetch(`http://localhost:3000/api/admin/uploadTest/${examId}`)
+    fetch(`${BACKEND_URL}/api/admin/uploadTest/${examId}`)
         .then(response => {
             if (!response.ok) {
                 if (response.status == 500) {
@@ -75,8 +75,7 @@ document.getElementById("uploadButton").addEventListener("click", () => {
         .then(data => {
             if (data.status) {
                 alert("Paper is uploaded successfully");
-                // I want it to redirect to frontend/admin/home.html
-                window.location.href = "/frontend/admin/home.html";
+                window.close();
             } else {
                 alert(data.message);
             }
@@ -116,7 +115,7 @@ function highlightQuestion(sectionIndex, activeNumber) {
 }
 
 function fetchQuestion() {
-    fetch(`http://localhost:3000/api/admin/getQuestion/${examId}/${section}/${questionNumber}`)
+    fetch(`${BACKEND_URL}/api/admin/getQuestion/${examId}/${section}/${questionNumber}`)
         .then(response => {
             if (!response.ok) throw new Error('Network response was not ok');
             return response.json();
@@ -231,7 +230,7 @@ async function submitFunction() {
 
     question.complete = complete;
 
-    fetch(`http://localhost:3000/api/admin/saveQuestion/${examId}/${section}/${questionNumber}`, {
+    fetch(`${BACKEND_URL}/api/admin/saveQuestion/${examId}/${section}/${questionNumber}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(question)

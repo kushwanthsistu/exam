@@ -5,7 +5,7 @@ let question = -1 ;
 let storeddata = [] ;
 
 document.addEventListener("DOMContentLoaded", () => {
-    fetch(`http://localhost:3000/api/user/getQuestionStatus/${token}`, {
+    fetch(`${BACKEND_URL}/api/user/getQuestionStatus/${token}`, {
         method: 'GET',
     })
     .then(res => res.json())
@@ -109,7 +109,7 @@ document.getElementById("questionButtonsBlock").addEventListener('click', (e) =>
 
         if(storeddata.includes(id)) return;
 
-        fetch(`http://localhost:3000/api/user/getAnswers/${token}/${id}`, {
+        fetch(`${BACKEND_URL}/api/user/getAnswers/${token}/${id}`, {
             method: 'GET',
         })
         .then(res => {

@@ -1,51 +1,83 @@
-import express from "express"
-import mongoose from "mongoose"
-import router from "router"
-import cors from "cors"
-import path from "path"                       // 🔧 added
-import { fileURLToPath } from "url"          // 🔧 added
+import express from "express";
+import mongoose from "mongoose";
+import path from "path";
+import cors from "cors";
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
-import authentication from "./routes/Authentication.js"
-import exam from "./routes/examsetting.js"
-import adminRoutes from "./routes/adminroutes.js"
-import studentRoute from "./routes/studentroutes.js"
+import authentication from "./routes/Authentication.js";
+import exam from "./routes/examsetting.js";
+import adminRoutes from "./routes/adminroutes.js";
+import studentRoute from "./routes/studentroutes.js";
 
-const __filename = fileURLToPath(import.meta.url);  // 🔧 added
-const __dirname = path.dirname(__filename);         // 🔧 added
+dotenv.config();
 
-let app = new express();
+const app = express();
 
-app.use(cors());
+// ----------------- Fix __dirname in ESM -----------------
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// ----------------- CORS -----------------
+const allowedOrigins = [
+  "https://quick-test-platform.vercel.app",
+  "https://quick-test-platform.netlify.app",
+  "http://localhost:4000",
+  "http://localhost:3000"
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+// ----------------- Middlewares -----------------
 app.use(express.json());
-app.set('view engine', 'ejs');
-app.set('views', './views');
 
-app.use('/api/authenticate', authentication);
-app.use('/api/setExam', exam);
-app.use('/api/admin', adminRoutes);
-app.use('/api/user', studentRoute);
+// ✅ Views
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
-// 🔧 FIXED: serve frontend folder correctly
-app.use('/frontend', express.static(path.join(__dirname, '..', 'frontend')));
+// ✅ Static files
+app.use(express.static(path.join(__dirname, "public")));
 
-// syam added
-app.use(express.static('public'));
-app.get('/', (req, res) => res.render('index1'));
-// syam added
+// (Optional) if you want to serve frontend separately
+app.use("/frontend", express.static(path.join(__dirname, "..", "frontend")));
 
-mongoose.connect("mongodb://127.0.0.1:27017/exam");
+// ----------------- Routes -----------------
+app.use("/api/authenticate", authentication);
+app.use("/api/setExam", exam);
+app.use("/api/admin", adminRoutes);
+app.use("/api/user", studentRoute);
+
+// ----------------- Health check route -----------------
+app.get("/", (req, res) => {
+  res.send({
+    activeStatus: true,
+    error: false
+  });
+});
+
+// ----------------- MongoDB -----------------
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
 const db = mongoose.connection;
-db.on("error", (error) => {
-    console.log(error);
-});
-db.once("open", () => {
-    console.log("successfully connected to the database");
-});
+db.on("error", (error) => console.error("❌ MongoDB error:", error));
+db.once("open", () => console.log("✅ Connected to MongoDB Atlas"));
 
-app.get('/', (req, res) => {
-    console.log("this route is working");
-});
-
-app.listen(3000, () => {
-    console.log("listening on port 3000");
+// ----------------- Start server -----------------
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`✅ Listening on port ${PORT}`);
 });

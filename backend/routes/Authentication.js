@@ -20,7 +20,7 @@ router.post('/signup', async(req, res) => {
                 message : "Email id already exits"
             })
         }
-        let hashedPassword = await bcrypt.hash(password, 12) ;
+        let hashedPassword = await bcrypt.hash(password, 12);
         let user = new User({
             emailId : emailId,
             name : name,
@@ -92,7 +92,59 @@ router.post('/login', async(req, res) => {
 //     "password" : "adminpassword"
 // }
 
-router.post('/admin/login', async(req, res) => {
+router.post('/admin/login', async (req, res) => {
+    let { emailId, password } = req.body;
+
+    // hardcoded credentials
+    const adminEmail = "adminmailid@gmail.com";
+    const adminPassword = "adminpassword";  // you can also hash this if you want
+
+    try {
+        // check if email matches
+        if (emailId !== adminEmail) {
+            return res.status(400).json({
+                code: 1002,
+                status: false,
+                message: "email id doesn't exist"
+            });
+        }
+
+        // check if password matches
+        if (password !== adminPassword) {
+            return res.status(400).json({
+                code: 1003,
+                status: false,
+                message: "Incorrect Password"
+            });
+        }
+
+        // generate token
+        const token = jwt.sign(
+            {
+                admin: true,
+                emailId: emailId
+            },
+            secretKey,
+            { expiresIn: '3h' }
+        );
+
+        return res.status(200).json({
+            status: true,
+            message: "Admin logged in successfully",
+            token: token
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: false,
+            message: "Internal Server Error"
+        });
+    }
+});
+
+
+/* router.post('/admin/login', async(req, res) => {
     let {emailId, password} = req.body ;
     try {
         let data = await Admin.find({emailId : emailId}) ;
@@ -129,6 +181,6 @@ router.post('/admin/login', async(req, res) => {
             message : "Internal Server Error"
         })
     }
-})
+}) */
 
 export default router ;
