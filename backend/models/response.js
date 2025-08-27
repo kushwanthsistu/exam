@@ -18,14 +18,14 @@ let responseSchema = new mongoose.Schema({
         required : true
     },
     answer : {
-        type : String,
-        required : true
+        type : String
     },
     correct : {
         type : Boolean
     },
     type : {
-        type : Number,
+        type : Number, 
+        default : 0, 
         required : true
     }
 },

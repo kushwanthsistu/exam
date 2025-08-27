@@ -1,12 +1,14 @@
+import { FRONTEND_URL, BACKEND_URL } from "../config.js";
+
 let sectionCount = 1 ;
-function deleteButtonFunction(sectionNumber) {
+window.deleteButtonFunction = function(sectionNumber) {
     if(sectionCount === 1) {
-        alert("sections count cannot be zero") ; 
-        return ;
+        alert("sections count cannot be zero"); 
+        return;
     }
-    document.getElementById(`section${sectionNumber}`).remove() ;
-    sectionCount = sectionCount - 1 ;
-}
+    document.getElementById(`section${sectionNumber}`).remove();
+    sectionCount--;
+};
 
 let addSectionsButton = document.getElementById("addSections").addEventListener('click', () => {
     sectionCount = sectionCount+1 ;
@@ -114,7 +116,7 @@ document.querySelector("form").addEventListener("submit", (event) => {
     }
 
     // Fetch
-    fetch('http://localhost:3000/api/setExam/setTemplate', {
+    fetch(`${BACKEND_URL}/api/setExam/setTemplate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(details)

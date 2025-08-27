@@ -3,7 +3,10 @@ import mongoose from "mongoose"
 import Examtemplate from "../models/examtemplate.js"
 import Questioncount from "../models/questioncount.js";
 import Questions from "../models/questions.js";
+import Responses from "../models/response.js" ;
+import Attempts from "../models/attempts.js" ;
 import authorization from "./Authorization.js";
+import User from "../models/user.js";
 
 let router = express.Router() ;
 
@@ -135,16 +138,15 @@ router.get('/editTest/:id', async(req, res) => {
     }
 })
 
-// syam's change 
-router.delete('/deleteTest/:id', async (req, res) => {
+router.get('/deleteTest/:id', async (req, res) => {
     const id = req.params.id;
 
     try {
-        const result = await Examtemplate.deleteOne({ _id: id });
+        await Responses.deleteMany({ examId : id }) ;
 
-        if (result.deletedCount === 0) {
-            return res.status(404).json({ message: "Test not found" });
-        }
+        await Attempts.deleteMany({ examId : id }) ;
+
+        await Examtemplate.deleteOne({ _id: id });
 
         return res.status(200).json({ message: "Test deleted successfully" });
     } catch (error) {
@@ -183,6 +185,73 @@ router.get('/getQuestion/:examId/:subject/:qnumber', async(req, res) => {
         })
     }
 })
+
+router.get('/testAnalysis/:testid', async (req, res) => {
+    const testid = req.params.testid;
+
+    try {
+        const data = await Attempts.find({ examId: testid, completed: true });
+
+        if (!data || data.length === 0) {
+            return res.status(404).json({
+                status: false,
+                message: "No completed attempts found for this test"
+            });
+        }
+
+        console.log(data);
+
+        // Fetch user names for all unique userIds
+        const userIds = [...new Set(data.map(item => item.userId))]; // unique userIds
+        const users = await User.find({ _id: { $in: userIds } }, { name: 1 });
+
+        // Create a map for quick user lookup
+        const userMap = {};
+        users.forEach(user => {
+            userMap[user._id] = user.name;
+        });
+
+        // Build the participants array (sorted by marksScored desc)
+        const participants = data
+            .map(item => ({
+                name: userMap[item.userId] || "Unknown User",
+                marksScored: item.marksScored !== undefined ? item.marksScored : 0
+            }))
+            .sort((a, b) => b.marksScored - a.marksScored);
+
+        // Safely get totalMarks from any valid attempt
+        const validTotal = data.find(item => item.totalMarks !== undefined);
+        const totalMarks = validTotal ? validTotal.totalMarks : 0;
+
+
+        // Calculate statistics
+        const totalParticipants = participants.length;
+        const totalMarksScored = participants.reduce((acc, curr) => acc + curr.marksScored, 0);
+        const averageMarks = parseFloat((totalMarksScored / totalParticipants).toFixed(2));
+        const maxMarks = Math.max(...participants.map(p => p.marksScored));
+        const minMarks = Math.min(...participants.map(p => p.marksScored));
+
+        return res.status(200).json({
+            status: true,
+            message: "Test analysis fetched successfully",
+            data: {
+                participants,
+                totalParticipants,
+                totalMarks,
+                averageMarks,
+                maxMarks,
+                minMarks
+            }
+        });
+
+    } catch (error) {
+        console.error("Error in testAnalysis API:", error);
+        return res.status(500).json({
+            status: false,
+            message: "Internal Server Error"
+        });
+    }
+});
 
 router.post('/saveQuestion/:examId/:subject/:qnumber', async(req, res) => {
     let {examId, subject, qnumber} = req.params ;

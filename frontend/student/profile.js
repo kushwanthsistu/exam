@@ -1,53 +1,47 @@
-let token = localStorage.getItem("token") ;
-// console.log(token) ;
-if(!localStorage.getItem('token')){
-    location.href='ISE.html';
+import { FRONTEND_URL, BACKEND_URL } from "../config.js";
+
+let token = localStorage.getItem("token");
+
+if (!token) {
+    location.href = 'ISE.html';
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    fetch(`http://localhost:3000/api/user/getProfile`, {
+    const nameEl = document.getElementById("userName");
+    const emailEl = document.getElementById("userEmail");
+
+    // Show loading text initially
+    nameEl.innerHTML = `<span class="text-secondary">Loading...</span>`;
+    emailEl.innerHTML = `<span class="text-secondary">Loading...</span>`;
+
+    fetch(`${BACKEND_URL}/api/user/getProfile`, {
         method: 'GET',
         headers: {
-            'Authorization' : `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${token}`
         }
-        })
-        .then(res => {
-            // console.log("working till here") ;
-            if(res.status == 500) {
-                throw new Error("Internal server Error") ;
-            }
-            return res.json() ;
-        })
-        .then(data => {
-            // alert(data.data) ;
-            data = data.data ;
-            document.getElementById("userName").innerHTML = data.name ;
-            document.getElementById("userEmail").innerHTML = data.emailId ;
-        })
-        .catch(err => {
-            // console.log(error) ;
-            alert("Internal Server Error, unable to load the details. try refreshing the page")
-        });
-})
+    })
+    .then(res => {
+        if (res.status === 500) {
+            throw new Error("Internal server error");
+        }
+        return res.json();
+    })
+    .then(data => {
+        data = data.data;
 
+        // Set user details
+        nameEl.textContent = data.name || "Not available";
+        emailEl.textContent = data.emailId || "Not available";
+    })
+    .catch(err => {
+        console.error(err);
+        nameEl.innerHTML = `<span class="text-danger">Failed to load</span>`;
+        emailEl.innerHTML = `<span class="text-danger">Failed to load</span>`;
+    });
+});
+
+// Logout
 document.getElementById("logout").addEventListener("click", () => {
     localStorage.removeItem('token');
-    location.href='login.html' ;
-})
-
-function showSuccessMessage() {
-    const message = document.getElementById("successMessage");
-
-    // Reset visibility and opacity
-    message.classList.remove("d-none", "fade-out");
-    message.classList.add("fade-in");
-
-    // Remove the message after a delay (optional)
-    setTimeout(() => {
-        message.classList.remove("fade-in");
-        message.classList.add("fade-out");
-        setTimeout(() => {
-            message.classList.add("d-none");
-        }, 500); // match CSS transition duration
-    }, 2000); // message visible for 2 seconds
-}
+    location.href = 'login.html';
+});

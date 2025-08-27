@@ -199,8 +199,8 @@ router.get('/takeTest/:token', authorization.tokenAuthorization, async(req, res)
                 
         //     }
         // }
-        console.log(data) ;
-        console.log(questions) ;
+        // console.log(data) ;
+        // console.log(questions) ;
         res.render('test1', { data : data, questions : questions }) ;
     }
     catch(error) {
@@ -349,12 +349,12 @@ router.post('/submitAnswer/:token/:questionId', authorization.tokenAuthorization
         let data = await Responses.find({ examId : examId, questionId : questionId, userId : userId }) ;
         let question = await Questions.find({ _id : questionId }) ;
         if(data.length == 0) {
-            if(req.body.type == 0) {
-                return res.status(200).json({
-                    status : true, 
-                    message : "answer not submitted"
-                })
-            }
+            // if(req.body.type == 0) {
+            //     return res.status(200).json({
+            //         status : true, 
+            //         message : "answer not submitted"
+            //     })
+            // }
             let response = new Responses({
                 examId : examId, 
                 userId : userId,
@@ -385,7 +385,55 @@ router.post('/submitAnswer/:token/:questionId', authorization.tokenAuthorization
     }
 })
 
-router.get('/getOptions/:examId', authorization.userAuthorization, async(req, res) => {
+router.post('/markforreview/:token/:questionId', authorization.tokenAuthorization, async(req, res) => {
+    // console.log("got the request") ;
+    let userId = req.userId ;
+    let questionId = req.params.questionId ;
+    let examId = req.examId ;
+    console.log(req.body) ;
+    try {
+        let data = await Responses.find({ examId : examId, questionId : questionId, userId : userId }) ;
+        let question = await Questions.find({ _id : questionId }) ;
+        if(data.length == 0) {
+            // if(req.body.type == 0) {
+            //     return res.status(200).json({
+            //         status : true, 
+            //         message : "answer not submitted"
+            //     })
+            // }
+            let response = new Responses({
+                examId : examId, 
+                userId : userId,
+                questionId : questionId,
+                answer : "",
+                type : req.body.type
+            })
+            await response.save() ;
+            return res.status(200).json({
+                status : true,
+                message : "response saved successfully"
+            })
+        }
+        else {
+            let data = await Responses.updateOne({ examId : examId, questionId : questionId, userId : userId}, { type : req.body.type }) ;
+            return res.status(200).json({
+                status : true,
+                message : "response saved successfully"
+            })
+        }
+    }
+    catch(error) {
+        console.log(error) ;
+        return res.status(500).json({
+            status : false, 
+            message : "Internal Server Error"
+        })
+    }
+})
+
+// got an issue here rectified by changing :exam to :token.
+router.get('/getOptions/:token', authorization.tokenAuthorization, async(req, res) => {
+    console.log("this route is working fine") ;
     let userId = req.userId ;
     let examId = req.examId ;
     try {
@@ -513,7 +561,7 @@ router.get('/getButtonsStatus/:token', authorization.tokenAuthorization, async(r
     let examId = req.examId ;
     let userId = req.userId ;
     try {
-        let data = await Responses.find({ userId : userId, examId : examId, $or : [ { type : 1 }, { type : 2 }] }, 'questionId type -_id') ;
+        let data = await Responses.find({ userId : userId, examId : examId }, 'questionId type -_id') ;
         return res.status(200).json({
             status : true,
             message : "got the details",

@@ -12,7 +12,8 @@
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="profile.css" type="text/css">
-    <script defer src="profile.js"></script>
+    
+    <script type="module" src="profile.js"></script>
 </head>
 <body class="d-flex flex-column vh-100 m-0">
     <header class="sticky-top">
@@ -38,57 +39,29 @@
 
                 <i class="bi bi-person-circle d-flex justify-content-center fs-1 mt-2"></i>
 
-                <div class="row mt-5">
-                    <div class="col-12 col-sm-4 d-flex justify-content-md-end">
-                        <p>Name : </p>
-                    </div>
-                    
-                    <div class="col-12 col-sm-8">
-                        <p></p>
-                    </div>
-                </div>
-
                 <div class="row mt-3">
                     <div class="col-12 col-sm-4 d-flex justify-content-md-end">
                         <p>Email : </p>
                     </div>
                     
                     <div class="col-12 col-sm-8">
-                        <p></p>
+                        <p>adminmailid@gmail.com</p>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-12 col-sm-4 d-flex justify-content-md-end">
+                        <p>Password : </p>
+                    </div>
+                    
+                    <div class="col-12 col-sm-8">
+                        <p>adminpassword</p>
                     </div>
                 </div>
 
                 <div class="row d-flex justify-content-center  mt-3">
                     <button class="btn btn-danger w-auto" id="logoutButton">Log out</button>
                 </div>
-
-                <!-- <div class="row mt-5 bg-dark text-white rounded">
-                    <p class="d-flex justify-content-center mt-2">Change password?</p>
-                </div>
-
-                <form action="">
-                    <div class="form-group mt-3 row">
-                        <label class="form-label col-12 col-sm-4 mt-3 d-flex justify-content-md-end" for="userOldPassword">Old Password</label>
-                        <input class="col-12 col-sm-8" type="password" id="userOldPassword" autocomplete="on" placeholder="Your Old Password">
-                    </div>
-
-                    <div class="form-group mt-3 row">
-                        <label class="form-label col-12 col-sm-4 mt-3 d-flex justify-content-md-end" for="userNewPassword">New Password</label>
-                        <input class="col-12 col-sm-8" type="password" id="userNewPassword" autocomplete="on" placeholder="Your New Password">
-                    </div>
-                </form>
-
-                <div class="row d-flex justify-content-center mt-3">
-                    <button class="btn btn-success w-auto" onclick="showSuccessMessage()">Change Password</button>
-                </div>
-
-                <div id="successMessage" class="alert alert-success mt-3 text-center d-none" role="alert">
-                    Password changed successfully!
-                </div>
-
-                <div id="successMessage" class="alert alert-danger mt-3 text-center d-none" role="alert">
-                    Old password doesn't match, Check again.
-                </div> -->
             </div>
         </div>
     </main>

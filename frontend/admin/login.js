@@ -1,5 +1,10 @@
-document.querySelector("form").addEventListener("submit", (event) => {
-    event.preventDefault();  // Prevent form's default behavior
+import { FRONTEND_URL, BACKEND_URL } from "../config.js";
+
+const form = document.querySelector("form");
+const loader = document.getElementById("loader");
+
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
 
     const userEmail = document.getElementById("userEmail").value.trim();
     const userPassword = document.getElementById("userPassword").value.trim();
@@ -13,53 +18,53 @@ document.querySelector("form").addEventListener("submit", (event) => {
         alert("Password should not be empty");
         return;
     }
-    
-/*     new Promise((resolve) => {
-        // Simulate a successful login response
-        resolve({
-            ok: false,
-            json: () => Promise.resolve({
-                "status": false,
-                "message": "Internal Server Error"
-            })
-        });
-    }) */
-    
-    fetch('http://localhost:3000/api/authenticate/admin/login', {
-        method: 'POST',
+
+    console.log(BACKEND_URL);
+
+    // Show loader
+    loader.classList.remove("d-none");
+
+    fetch(`${BACKEND_URL}/api/authenticate/admin/login`, {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
         },
         body: JSON.stringify({
             emailId: userEmail,
-            password: userPassword
-        })
+            password: userPassword,
+        }),
     })
-    .then(response => {
-        if (!response.ok) { // ok:false;
-            return response.json().then(errData => {
+    .then((response) => {
+        if (!response.ok) {
+            return response.json().then((errData) => {
                 throw new Error(errData.message || "Login failed");
             });
         }
         return response.json();
     })
-    .then(data => {
-        if (data.status) { // status: true
-            // success message
+    .then((data) => {
+        if (data.status) {
+            // Success message
             alert(data.message);
 
             // Save token to localStorage
-            localStorage.setItem('token', data.token);
+            localStorage.setItem("token", data.token);
 
-            // Go to student home page
+            // Hide loader before redirect
+            loader.classList.add("d-none");
+
+            // Redirect to admin home page
             window.location.href = "home.html";
         } else {
-            // This block may not be needed, as we throw error above on non-ok responses
             alert(data.message || "Login failed");
         }
     })
-    .catch(error => {
+    .catch((error) => {
         console.error("Error:", error);
         alert(error.message);
+    })
+    .finally(() => {
+        // Hide loader when request completes
+        loader.classList.add("d-none");
     });
 });
